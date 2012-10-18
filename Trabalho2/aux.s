@@ -135,15 +135,19 @@ numToDecStr:
     ldr r1, [r6], #4      @ Divisor in r1
     bl divide
     ldrb r8, [r5, r0]     @ Loads Char
-    add r7, r7, #1        @ Fresh iterator
+    mov r10, r0
+    add r7, r7, #1        @ Refresh iterator
     cmp r9, #0            @ if added a number to buffer
     ldmfd sp!, {r0-r3}
     bne end_if_dec
-      cmp r7, #11         @ check iterator
-      beq return_dec
+      cmp r7, #10         @ check iterator
+      beq end_if_dec
         cmp r8, #'0'       @ if r8 == '0'
         beq for_dec
     end_if_dec:
+    ldr r11, [r6, #-4]
+    mul r10, r11, r10
+    sub r1, r1, r10
     strb r8, [r0], #1
     add r9, r9, #1
     cmp r7, #10
