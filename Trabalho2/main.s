@@ -9,7 +9,7 @@ main:
   ldr r0, =mystring
   ldr r1, =otherstring2
   mov r2, #'1'
-  mov r3, #10
+  mov r3, #-110
   bl  myprintf
 __mainend:
   mov r7, #1
@@ -18,7 +18,7 @@ __mainend:
   .data
   .align  4
 mystring:
-  .asciz  "%s My first string has only %c %d modifier.\n"
+  .asciz  "%s My first string has only %c %-8d modifier.\n"
   .asciz  "garbage"
 otherstring:
   .asciz "1"

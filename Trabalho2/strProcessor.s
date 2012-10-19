@@ -24,7 +24,7 @@ processStr:
   stmfd sp!, {r4-r11, lr}
   mov fp, sp
 
-  ldr r6, [sp, #36] @ Pointer to flag handler
+  ldr r6, [sp, #36] @ Pointer to format handler
   ldr r2, [sp, #40] @ Pointer the buffer
 
   mov r1, #0    @ Argument iterator

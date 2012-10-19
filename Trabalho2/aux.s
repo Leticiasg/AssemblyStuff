@@ -178,6 +178,33 @@ divide:
   ldmfd sp!, {r4-r11, pc}
 
   .align 4
+  .global strToNum
+  .type strToNum, %function
+
+@ Arguments: r0 = pointer to the end of the buffer
+@ Return: r1 = coverted number
+strToNum:
+  stmfd sp!, {r4-r11, lr}
+
+  ldr r4, =num_map
+  ldrb r5, [r0], #1
+  mov r1, #0        @ num buffer
+  mov r7, #10       @ constant 10
+  for_count:
+    sub r5, r5, #'0'
+    cmp r5, #10
+    bge return_str_to_num
+    mul r1, r1, r7
+    add r1, r1, r5
+    ldrb r5, [r0], #1
+    b for_count
+    
+  return_str_to_num:
+  sub r0, r0, #2
+  @ Return from function
+  ldmfd sp!, {r4-r11, pc}
+
+  .align 4
   .data
 num_map: 
   .byte '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'
