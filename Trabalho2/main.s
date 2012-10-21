@@ -6,14 +6,15 @@
   .type main, %function
 
 main:
-  ldr r0, =mystring
-  ldr r1, =otherstring2
-  ldr r2, =0x142
-  ldr r3, =0xfffff
-  bl  myprintf
+  @ldr r0, =mystring
+  @ldr r1, =otherstring2
+  @ldr r2, =0x142
+  @ldr r3, =0xfffff
+  @bl  myprintf
   ldr r0, =scanfstring
   ldr r1, =res
   bl  myscanf
+  ldr r9, =res
 __mainend:
   mov r7, #1
   svc 0
@@ -28,6 +29,6 @@ otherstring:
 otherstring2:
   .asciz "Fuck Life !!!!"
 scanfstring:
-  .asciz "asdsad %d\n"
+  .asciz "as %c"
 res:
-  .word 0
+  .fill 1234, 1, 0
