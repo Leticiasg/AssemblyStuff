@@ -8,9 +8,6 @@
 
 @ Auxiliary functions
 
-  .text
-  .align 4@ Auxiliary functions
-
     .text
     .align 4
     .global numToHexStr
@@ -66,6 +63,7 @@ numToHexStr:
 @            r1 = number to convert
 @            r2 = mask
 @            r3 = shift
+@            stack -- int_size
 @ Return: r0 = pointer to the end of the buffer
 @         r1 = number of elements added to the buffer
 numToOctHexStr:
@@ -135,15 +133,19 @@ numToDecStr:
     ldr r1, [r6], #4      @ Divisor in r1
     bl divide
     ldrb r8, [r5, r0]     @ Loads Char
-    add r7, r7, #1        @ Fresh iterator
+    mov r10, r0
+    add r7, r7, #1        @ Refresh iterator
     cmp r9, #0            @ if added a number to buffer
     ldmfd sp!, {r0-r3}
     bne end_if_dec
-      cmp r7, #11         @ check iterator
-      beq return_dec
+      cmp r7, #10         @ check iterator
+      beq end_if_dec
         cmp r8, #'0'       @ if r8 == '0'
         beq for_dec
     end_if_dec:
+    ldr r11, [r6, #-4]
+    mul r10, r11, r10
+    sub r1, r1, r10
     strb r8, [r0], #1
     add r9, r9, #1
     cmp r7, #10
@@ -171,6 +173,33 @@ divide:
   @ Return from function
   return_divide:
   mov r0, r5
+  ldmfd sp!, {r4-r11, pc}
+
+  .align 4
+  .global strToNum
+  .type strToNum, %function
+
+@ Arguments: r0 = pointer to the end of the buffer
+@ Return: r1 = coverted number
+strToNum:
+  stmfd sp!, {r4-r11, lr}
+
+  ldr r4, =num_map
+  ldrb r5, [r0], #1
+  mov r1, #0        @ num buffer
+  mov r7, #10       @ constant 10
+  for_count:
+    sub r5, r5, #'0'
+    cmp r5, #10
+    bge return_str_to_num
+    mul r1, r1, r7
+    add r1, r1, r5
+    ldrb r5, [r0], #1
+    b for_count
+    
+  return_str_to_num:
+  sub r0, r0, #2
+  @ Return from function
   ldmfd sp!, {r4-r11, pc}
 
   .align 4
