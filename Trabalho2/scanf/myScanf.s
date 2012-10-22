@@ -59,6 +59,7 @@ myscanf:
 @ Arguments: r0 = pointer to the end of the buffer
 @            r1 = argument of scanf
 @            r2 = max size of the number to be read
+@            r3 = second argument of scanf
 scanfHandler:
   stmfd sp!, {r4-r11, lr}
   
@@ -138,7 +139,10 @@ scanfHandler:
     ldmfd sp!, {r0-r3}
     b return
   case_L:
-  b return
+    stmfd sp!, {r1-r3}
+    bl longHandler
+    ldmfd sp!, {r1-r3}
+    b return
   case_d:
     stmfd sp!, {r0-r3}
     mov r0, r2
@@ -198,12 +202,55 @@ scanfHandler:
   return:
   ldmfd sp!, {r4-r11, pc}
 
+@ Arguments: r0 = pointer to the end of the buffer
+@            r1 = argument of scanf
+@            r2 = max size of the number to be read
+@            r3 = second argument of scanf
+longHandler:
+  stmfd sp!, {r4-r11, lr}
+  
+  ldrb r4, [r0, #1]
+  cmp r4, #'x'
+
+  ldmfd sp!, {r4-r11, pc}
+
+@ This function reads a string from stdin the represents a number 
+@ and stores it 
+@ Arguments:  r0 = base of the number
+@             r1 = address to store number readed
+@             r2 = second address to store number readed
+readNumber64:
+  stmfd sp!, {r4-r11, lr}
+ 
+  @ Read the string from stdin and stores in auxBuffer
+  stmfd sp!, {r0-r3}
+  ldr r0, =auxBuffer    @ Loads auxiliar buffer
+  bl readString
+  mov r4, r0            @ Pointer to the beginning of the string readed is in r4
+  mov r5, r1            @ Pointer to the end of the string readed is in r5
+  ldmfd sp!, {r0-r3}
+
+  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  @@@@@@                          @@@@@@@
+  @                                     @
+  @                                     @
+  @                                     @
+  @                                     @
+  @             FINISH HERE !!!!        @
+  @                                     @
+  @                                     @
+  @                                     @
+  @                                     @
+  @@@@@@                           @@@@@@
+  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+  ldmfd sp!, {r4-r11, pc}
+
 @ This function reads a string from stdin that represents a number
 @ and returns it in r0
 @ Arguments:  r0 = max number to be read
 @             r1 = address to store number readed
 @             r2 = base of the number
-@             r3 = second address to store the number - if any
 @ Return: r0 = Number readed
 @         r1 = pointer to the beggining of the buffer
 @         r2 = 1 if number is negative - 0 if it isn't
