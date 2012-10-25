@@ -230,6 +230,33 @@ readNumber64:
   mov r5, r1            @ Pointer to the end of the string readed is in r5
   ldmfd sp!, {r0-r3}
 
+  cmp r4, r5
+  beq return_readNumber64
+  mov r6, #0   @ Highest part of the number
+  mov r7, #0   @ Lowest part of the number
+  mov r9, #0
+  for_readNumber64:
+    stmfd sp!, {r0-r3}
+    @ Multiply the numbers
+    mov r1, r6
+    mov r2, r7
+    bl mul64
+    mov r10, r0
+    mov r11, r1
+    @ Loads the char of the string
+    mov r0, r4
+    bl charToNum
+    mov r8, r0
+    orr r9, r9, r1
+    ldmfd sp!, {r0-r3}
+    adds r7, r11, r7
+    addcs r6, r6, #1
+    add r6, r6, r10
+
+    add r4, r4, #1
+    cmp r4, r5
+    bne for_readNumber64
+
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@                          @@@@@@@
   @                                     @
@@ -243,7 +270,8 @@ readNumber64:
   @                                     @
   @@@@@@                           @@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
+  
+  return_readNumber64:
   ldmfd sp!, {r4-r11, pc}
 
 @ This function reads a string from stdin that represents a number

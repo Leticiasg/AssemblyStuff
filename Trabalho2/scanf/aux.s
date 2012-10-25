@@ -9,6 +9,46 @@
   .text
 
   .align 4
+  .global add64
+  .type add64, %function
+@ Arguments: r0 = fisrt Register
+@            r1 = highest part of the number
+@            r2 = lowest part of the number
+@ Return: r0 = highest part of the number
+@         r1 = lowest part of the number
+add64:
+  stmfd sp!, {r4-r11, lr}
+
+  adds r2, r2, r0
+  addcs r1, r1, #1
+
+  ldmfd sp!, {r4-r11, pc}
+
+  .align 4
+  .global mul64
+  .type mul64, %function
+
+@ This function multiples a 32bit register by 
+@ two 32bit register and stores on them the result
+@ Arguments: r0 = first Register
+@            r1 = highest part of the number
+@            r2 = lowest part of the number
+@ Return r0 = highest part of the number
+@        r1 = lowest part of the number
+mul64:
+  stmfd sp!, {r4-r11, lr}
+
+  @ long long multiplication
+  umulls r4, r5, r2, r0       @ r4 -- low part, r5 -- high part
+  mul r1, r2, r1
+  add r1, r5, r1
+
+  mov r0, r1
+  mov r1, r2
+
+  ldmfd sp!, {r4-r11, pc}
+
+  .align 4
   .global charToNum
   .type charToNum, %function
 
