@@ -53,6 +53,67 @@ numToHexStr:
   mov pc, lr
 
     .align 4
+    .global numToStr
+    .type numToStr, %function
+
+@ Subtracts two 64 bit numbers (r0,r1) - (r2,r3)
+@ Arguments: r0 = low part of first number
+@            r1 = high part of first number
+@            r2 = low part of second number
+@            r3 = high part of second number
+@ Return : r0 = low part of result
+@          r1 = high part of result
+sub64:
+    stmfd sp!, {r4-r11, lr}
+
+    subs r0, r0, r2
+    subcs r1, r1, #1
+    sub r1, r1, r3
+
+    ldmfd sp!, {r4-r11, pc}
+
+@ Arguments : r0 = pointer to the end of the buffer
+@             r1 = low part of the number to convert
+@             r2 = high part of the number to convert
+@             r3 = address to the division map
+numToStr:
+    stmfd sp!, {r4-r11, lr}
+  
+    ldr r7, =num_map
+    for_numToStr:
+      mov r6, #0            @ Digit Counter
+      ldr r4, [r3], #1
+      ldr r5, [r3], #1
+      cmp r4, #2
+      beq return_numToStr
+      do_numToStr:
+        @ 64bit Subtraction
+        subs r1, r1, r5
+        subcs r2, r2, #1
+        sub r2, r2, r4
+        add r6, r6, #1
+        cmp r2, #0
+        bgt do_numToStr
+      @ Stores number
+      sub r6, r6, #1
+      ldrb r6, [r7, r6]
+      strb r6, [r0], #1
+      b for_numToStr
+
+    return_numToStr
+    ldmfd sp!, {r4-r11, pc}
+
+@ Arguments: r0 = number to convert
+@ Return : r0 = char in ASCII
+numToChar:
+  stmfd sp!, {r4-r11, lr}
+
+  ldr r4, =num_map
+  ldr r0, [r4, r0]
+
+  ldmfd sp!, {r4-r11, pc}
+
+    .align 4
     .global numToOctHexStr
     .type numToOctHexStr, %function
 
@@ -156,8 +217,21 @@ numToDecStr:
   @ Return from function
   ldmfd sp!, {r4-r11, pc}
 
+@ Returns in r0 the result of r0 % r1
+mod:
+  stmfd sp!, {r4-r11, lr}
+
+  for_mod:
+    sub r0, r0, r1
+    cmp r0, #0
+    bge for_mod
+
+  add r0, r0, r1
+  ldmfd sp!, {r4-r11, pc}
+
 @ Arguments: r0 = number to divide
 @            r1 = divisor
+@            r2 = address of the division map
 @ Return : r0 = mod
 divide:
   stmfd sp!, {r4-r11, lr}
@@ -192,7 +266,7 @@ strToNum:
     sub r5, r5, #'0'
     cmp r5, #10
     bge return_str_to_num
-    mul r1, r1, r7
+    mul r1, r7, r1
     add r1, r1, r5
     ldrb r5, [r0], #1
     b for_count
@@ -206,8 +280,11 @@ strToNum:
   .data
 num_map: 
   .byte '0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'
-division_map:
-  .word 1000000000, 100000000, 10000000, 1000000, 100000, 10000, 1000, 100, 10, 1
+division_map_dec:
+  .word 1000000000, 0, 100000000, 0, 10000000, 0, 1000000, 0, 100000, 0, 10000, 0, 1000, 0, 100, 0, 10, 0, 1, 0, 1000000000, 0, 100000000, 0, 10000000, 0, 1000000, 0, 100000, 0, 10000, 0, 1000, 0, 100, 0, 10, 0, 1, 2, 2
+
+division_map_hex:
+  .word 0x10000000, 0, 0x1000000, 0, 0x100000, 0, 0x10000, 0, 0x1000, 0, 0x100, 0, 0x10, 0, 0x1, 0, 0, 0x10000000, 0, 0x1000000, 0, 0x100000, 0, 0x10000, 0, 0x1000, 0, 0x100, 0, 0x10, 0, 0x1, 2, 2
 
   .equ MAX_BUFFER_SIZE, 128
 aux_buffer:

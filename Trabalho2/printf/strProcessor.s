@@ -22,21 +22,18 @@
 processStr:
   @ Stores registers in stack
   stmfd sp!, {r4-r11, lr}
-  mov fp, sp
 
   ldr r6, [sp, #36] @ Pointer to format handler
   ldr r2, [sp, #40] @ Pointer the buffer
 
-  mov r1, #0    @ Argument iterator
+  mov r1, #4    @ Argument iterator
   ldrb r5, [r0]  @ Firs element of the string in r5
   cmp r5, #0
   beq while_1
   do_1:
-    cmp r5, #37 @ Compares the r5 with the % character
+    cmp r5, #'%' @ Compares the r5 with the % character
     bne if_1
       stmfd sp!, {r1,r3}
-      add r1, r1, #88   @ Get the number address
-      ldr r1, [sp, r1]  @ The number is in r1
       blx r6
       ldmfd sp!, {r1,r3}
       add r1, r1, #4

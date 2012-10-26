@@ -17,12 +17,13 @@
 @            r1-r3 and stack = arguments of the string
 myprintf:
   @ Stores arguments in stack
-  stmfd sp!, {r1-r3}
+  stmfd sp!, {r0-r3}
 
   @ Stores registers in stack
   stmfd sp!, {r4-r11, lr}
   mov fp, sp
-  
+  add fp, fp, #36    @ Address of the arguments of myprintf
+
   @ Call processStr
   ldr r5, =myPrintfHandler
   ldr r6, =buff
@@ -46,7 +47,7 @@ myprintf:
 
 
 @ Arguments: r0 = pointer to the end of the string
-@            r1 = argument of myprintf
+@            r1 = shift on buffer of arguments of myprintf
 @            r2 = pointer to the end of the buffer
 @ Return:    r2 = pointer to the end of the buffer modified
 @            r1 = number of elements added to the buffer
@@ -169,6 +170,7 @@ myPrintfHandler:
     b return
   case_u:
     stmfd sp!, {r0, r3}
+    ldr r1, [fp, r1]
     mov r0, r2
     bl numToDecStr
     mov r2, r0
@@ -176,6 +178,7 @@ myPrintfHandler:
     b return
   case_o:
     stmfd sp!, {r0,r3}
+    ldr r1, [fp, r1]
     mov r0, r2
     mov r2, #0x7          @ Mask 
     mov r3, #3            @ Shift
@@ -185,6 +188,7 @@ myPrintfHandler:
     b return
   case_x:
     stmfd sp!, {r0,r3}
+    ldr r1, [fp, r1]
     mov r0, r2
     mov r2, #0xF          @ Mask
     mov r3, #4            @ Shift
@@ -197,6 +201,7 @@ myPrintfHandler:
     mov r1, #1
     b return
   case_s:
+    ldr r1, [fp, r1]
     ldrb r5, [r1]
     cmp r5, #0
     beq return
