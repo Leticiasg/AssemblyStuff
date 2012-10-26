@@ -40,11 +40,11 @@ mul64:
 
   @ long long multiplication
   umulls r4, r5, r2, r0       @ r4 -- low part, r5 -- high part
-  mul r1, r2, r1
+  mul r1, r0, r1
   add r1, r5, r1
 
   mov r0, r1
-  mov r1, r2
+  mov r1, r4
 
   ldmfd sp!, {r4-r11, pc}
 

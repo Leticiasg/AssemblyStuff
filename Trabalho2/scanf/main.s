@@ -11,7 +11,7 @@ main:
   ldr r2, =res2
   bl  myscanf
   ldr r9, =res
-  ldrb r9, [r9]
+  ldr r9, [r9]
   ldr r9, =res2
   ldr r9, [r9]
 __mainend:
@@ -28,7 +28,7 @@ otherstring:
 otherstring2:
   .asciz "Fuck Life !!!!"
 scanfstring:
-  .asciz "as %hhx %x"
+  .asciz "as %d"
 res:
   .word 123
 res2:

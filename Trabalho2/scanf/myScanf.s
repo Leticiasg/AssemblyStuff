@@ -32,9 +32,16 @@ myscanf:
     bne if_1
       stmfd sp!, {r1,r3}
       add r1, r1, #44   @ Get the number address
+      add r3, r1, #4
+      ldr r3, [sp, r3]  @ Second number is in r3
       ldr r1, [sp, r1]  @ The number is in r1
       ldr r2, =0xFFFFFFFF
       bl scanfHandler
+      ldrb r1, [r0,#1]
+      cmp r1, #' '
+      bne end_if_2
+        add r0, r0, #1
+      end_if_2:
       ldmfd sp!, {r1,r3}
       add r1, r1, #4
       b end_if_1
@@ -140,24 +147,32 @@ scanfHandler:
     b return
   case_L:
     stmfd sp!, {r1-r3}
-    bl longHandler
+    ldr r4, [fp, #-40]
+    add r4, r4, #4
+    str r4, [fp, #-40]
+    ldr r2, =0x0
+    bl scanfHandler
     ldmfd sp!, {r1-r3}
     b return
   case_d:
     stmfd sp!, {r0-r3}
+    mov r4, r3
     mov r0, r2
     mov r2, #10
-    bl readNumber
-    cmp r2, #1
-    bne end_if_case_d     @ If number is negative
-      mov r4, r0
+    bl readNumber64
+      
+      cmp r2, #1
+      bne end_if_case_d     @ If number is negative
+      ldr r5, =0xFFFFFFFF
+      eor r0, r0, r5
+      eor r3, r3, r5
+      add r0, r0, #1
+      add r3, r3, #1
+      stmfd sp!, {r0}
+      mov r2, r4
+      bl storeNumber64
+      add sp, sp, #4
       ldmfd sp!, {r0-r3}
-      mov r6, r2
-      mov r5, #2
-      mul r5, r4, r5
-      sub r2, r4, r5
-      bl storeNumber
-      mov r2, r6
       b return
     end_if_case_d:
     ldmfd sp!, {r0-r3}
@@ -166,21 +181,21 @@ scanfHandler:
     stmfd sp!, {r0-r3}
     mov r0, r2
     mov r2, #8
-    bl readNumber
+    bl readNumber64
     ldmfd sp!, {r0-r3}
   b return
   case_u:
     stmfd sp!, {r0-r3}
     mov r0, r2
     mov r2, #10
-    bl readNumber
+    bl readNumber64
     ldmfd sp!, {r0-r3}
   b return
   case_x:
     stmfd sp!, {r0-r3}
     mov r0, r2
     mov r2, #16
-    bl readNumber
+    bl readNumber64
     ldmfd sp!, {r0-r3}
   b return
   case_c:
@@ -202,23 +217,16 @@ scanfHandler:
   return:
   ldmfd sp!, {r4-r11, pc}
 
-@ Arguments: r0 = pointer to the end of the buffer
-@            r1 = argument of scanf
-@            r2 = max size of the number to be read
-@            r3 = second argument of scanf
-longHandler:
-  stmfd sp!, {r4-r11, lr}
-  
-  ldrb r4, [r0, #1]
-  cmp r4, #'x'
-
-  ldmfd sp!, {r4-r11, pc}
-
 @ This function reads a string from stdin the represents a number 
 @ and stores it 
-@ Arguments:  r0 = base of the number
-@             r1 = address to store number readed
-@             r2 = second address to store number readed
+@ Arguments:  r0 = max number to be read
+@             r1 = address to store high part of number readed
+@             r2 = base of the number
+@             r3 = address to store low part of number readed
+@ Return: r0 = low part of the Number readed
+@         r1 = pointer to the beggining of the buffer
+@         r2 = 1 if number is negative - 0 if it isn't
+@         r3 = high part of the number readed
 readNumber64:
   stmfd sp!, {r4-r11, lr}
  
@@ -238,41 +246,78 @@ readNumber64:
   for_readNumber64:
     stmfd sp!, {r0-r3}
     @ Multiply the numbers
+    mov r0, r2
     mov r1, r6
     mov r2, r7
     bl mul64
-    mov r10, r0
-    mov r11, r1
+    mov r6, r0
+    mov r7, r1
     @ Loads the char of the string
     mov r0, r4
     bl charToNum
     mov r8, r0
     orr r9, r9, r1
     ldmfd sp!, {r0-r3}
-    adds r7, r11, r7
+    adds r7, r8, r7
     addcs r6, r6, #1
-    add r6, r6, r10
 
     add r4, r4, #1
     cmp r4, r5
     bne for_readNumber64
-
-  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  @@@@@@                          @@@@@@@
-  @                                     @
-  @                                     @
-  @                                     @
-  @                                     @
-  @             FINISH HERE !!!!        @
-  @                                     @
-  @                                     @
-  @                                     @
-  @                                     @
-  @@@@@@                           @@@@@@
-  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   
+  mov r2, r3
+  mov r3, r6
+  stmfd sp!, {r7}
+  bl storeNumber64
+  add sp, sp, #4
+  mov r2, r9
+  mov r0, r7
+  mov r3, r6
   return_readNumber64:
   ldmfd sp!, {r4-r11, pc}
+
+
+@ Arguments:  r0 = max number to be read
+@             r1 = address to store low part number readed
+@             r2 = address to store high part number readed
+@             r3 = high part of number to be stored
+@             stack = low part of number to be stored
+storeNumber64:
+  stmfd sp!, {r4-r11, lr}
+  
+  ldr r4, [sp, #36]
+  
+  ldr r5, =0x100
+  cmp r0, r5
+  beq storeByte64
+  ldr r5, =0x10000
+  cmp r0, r5
+  beq storeHalf64
+  ldr r5, =0xFFFFFFFF
+  cmp r0, r5
+  beq store32Bit64
+  b store64Bit64
+
+  storeByte64:
+    ldr r5, =0xFF
+    and r4, r5, r4
+    strb r4, [r1]
+    b return_storeNumber64
+  storeHalf64:
+    ldr r5, =0xFFFF
+    and r4, r5, r4
+    strh r4, [r1]
+    b return_storeNumber64
+  store32Bit64:
+    str r4, [r1]
+    b return_storeNumber64
+  store64Bit64:
+    str r4, [r1]
+    str r3, [r2]
+
+  return_storeNumber64:
+  ldmfd sp!, {r4-r11, pc}
+  
 
 @ This function reads a string from stdin that represents a number
 @ and returns it in r0
@@ -370,6 +415,7 @@ readString:
     cmp r5, #'\t'
     beq return_readString
     cmp r5, #' '
+    
     beq return_readString
 
     strb r5, [r4], #1
