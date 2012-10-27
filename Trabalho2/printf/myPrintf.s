@@ -49,6 +49,7 @@ myprintf:
 @ Arguments: r0 = pointer to the end of the string
 @            r1 = shift on buffer of arguments of myprintf
 @            r2 = pointer to the end of the buffer
+@            r3 = second argument of myprintf
 @ Return:    r2 = pointer to the end of the buffer modified
 @            r1 = number of elements added to the buffer
 @            r3 = number returned by constant
@@ -150,7 +151,21 @@ myPrintfHandler:
     bl myPrintfHandler
     b return
   case_ll:
-    bl ll_handler
+    stmfd sp!, {r3}
+    mov r5, r0
+    mov r4, r1
+    mov r0, r1
+    mov r1, #8
+    bl mod
+    cmp r0, #0
+    beq end_if_case_ll
+      add r1, r4, #4
+    end_if_case_ll:
+    mov r0, r5
+    add r4, r1, #4
+    ldr r3, [fp, r4]
+    bl myPrintfHandler
+    ldmfd sp!, {r3}
     b return
   case_d:
   case_i:
@@ -164,35 +179,40 @@ myPrintfHandler:
       add r1, r1, #1
     end_invert:
     mov r0, r2
-    bl numToDecStr
+    ldr r1, [fp, r1]
+    mov r2, r3
+    ldr r0, =division_map_dec
+    bl numToStr
     mov r2, r0
     ldmfd sp!, {r0, r3}
     b return
   case_u:
     stmfd sp!, {r0, r3}
-    ldr r1, [fp, r1]
     mov r0, r2
-    bl numToDecStr
+    ldr r1, [fp, r1]
+    mov r2, r3
+    ldr r3, =division_map_dec
+    bl numToStr
     mov r2, r0
     ldmfd sp!, {r0, r3}
     b return
   case_o:
     stmfd sp!, {r0,r3}
-    ldr r1, [fp, r1]
     mov r0, r2
-    mov r2, #0x7          @ Mask 
-    mov r3, #3            @ Shift
-    bl numToOctHexStr
+    ldr r1, [fp, r1]
+    mov r2, r3
+    ldr r3, =division_map_octal
+    bl numToStr
     mov r2, r0
     ldmfd sp!, {r0,r3}
     b return
   case_x:
     stmfd sp!, {r0,r3}
-    ldr r1, [fp, r1]
     mov r0, r2
-    mov r2, #0xF          @ Mask
-    mov r3, #4            @ Shift
-    bl numToOctHexStr
+    ldr r1, [fp, r1]
+    mov r2, r3
+    ldr r3, =division_map_hex
+    bl numToStr
     mov r2, r0
     ldmfd sp!, {r0,r3}
     b return
@@ -220,49 +240,6 @@ myPrintfHandler:
     b return
 
   return:
-  ldmfd sp!, {r4-r11, pc}
-
-@ Arguments: r0 = pointer to the end of the string
-@            r1 = argument of myprintf
-@            r2 = pointer to the end of the buffer
-@ Return:    r2 = pointer to the end of the buffer modified
-@            r1 = number of elements added to the buffer
-@            r3 = number returned by constant
-ll_handler:
-  stmfd sp!, {r4-r11, lr}
-  
-  ldr r4, [fp, #-8]    @ strProcessor.s:37 r1
-  add r4, r4, #4
-  str r4, [fp, #-8]
-  add r4, r4, #80
-  ldr r4, [fp, r4]     @ second argument of myPrintf
-  
-  ldrb r5, [r0, #1]!   @ char is in r5
-  cmp r5, #'d'
-  beq case_lld
-  cmp r5, #'i'
-  beq case_lli
-  cmp r5, #'o'
-  beq case_llo
-  cmp r5, #'u'
-  beq case_llu
-  cmp r5, #'x'
-  beq case_llx
-
-  case_lld:
-  case_lli:
-  case_llo:
-  case_llu:
-  case_llx:
-    sub r0, r0, #1
-    bl myPrintfHandler
-    mov r5, r1
-    sub r0, r0, #1
-    mov r1, r4
-    bl myPrintfHandler
-    add r1, r5, r1
-
-  @ Return from function
   ldmfd sp!, {r4-r11, pc}
 
 @ Adds a char passed in r3 after a number

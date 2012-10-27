@@ -8,8 +8,8 @@
 main:
   ldr r0, =mystring
   ldr r1, =otherstring2
-  ldr r2, =0x142
-  ldr r3, =0xfffff
+  ldr r2, =0xfbfffbff
+  ldr r3, =0xffaff
   bl  myprintf
   __mainend:
   mov r7, #1
@@ -18,7 +18,7 @@ main:
   .data
   .align  4
 mystring:
-  .asciz  "%s My first string has only %x modifier.\n"
+  .asciz  "%s My first string has only %llu modifier.\n"
   .asciz  "garbage"
 otherstring:
   .asciz "1"

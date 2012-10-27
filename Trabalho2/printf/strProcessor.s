@@ -29,6 +29,7 @@ processStr:
   mov r1, #4    @ Argument iterator
   ldrb r5, [r0]  @ Firs element of the string in r5
   cmp r5, #0
+  mov r3, #0
   beq while_1
   do_1:
     cmp r5, #'%' @ Compares the r5 with the % character
