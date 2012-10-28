@@ -51,6 +51,7 @@ numToStr:
           sbc r2, r2, r4
           cmp r2, r4
           bhi do_numToStr
+          blo store_numToStr
           cmp r1, r5
           bhs do_numToStr
           b store_numToStr

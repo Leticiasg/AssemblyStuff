@@ -207,9 +207,11 @@ myPrintfHandler:
     ldr r1, [fp, r1]
     cmp r3, #0
     bgt end_invert          @ Adds the signal '-' to the string
+    blt invert
     mov r5, r3
     cmp r1, #0
     bge end_invert
+    invert: 
       mov r4, #'-'
       strb r4, [r2], #1
       ldr r4, =0xFFFFFFFF
