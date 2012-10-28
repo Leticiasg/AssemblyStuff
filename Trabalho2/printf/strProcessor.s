@@ -30,6 +30,7 @@ processStr:
   ldrb r5, [r0]  @ Firs element of the string in r5
   cmp r5, #0
   mov r3, #0
+  mov r7, #0
   beq while_1
   do_1:
     cmp r5, #'%' @ Compares the r5 with the % character
@@ -51,4 +52,41 @@ processStr:
   while_1:
 
   @ Return from function
+  ldmfd sp!, {r4-r11, pc}
+
+  .align 4
+  .global getSize
+  .type getSize, %function
+
+@ Arguments: r0 = pointer to the string
+@ Return : r0 = number of masks
+getSize:
+  stmfd sp!, {r4-r11, lr}
+  
+  mov r5, #0        @ Counter
+  ldrb r4, [r0]
+  cmp r4, #'\0'
+  beq return_getSize
+  for_getSize:
+    cmp r4, #'%'
+    bne endif_getSize
+      add r5, r5, #1
+      while_getSize:
+        ldrb r4, [r0, #1]!
+        cmp r4, #' '
+        beq endif_getSize
+        cmp r4, #'\n'
+        beq endif_getSize
+        cmp r4, #'\t'
+        beq endif_getSize
+        add r5, r5, #1
+        b while_getSize
+    endif_getSize:
+    ldrb r4, [r0], #1
+    cmp r4, #'\0'
+    beq return_getSize
+    b for_getSize
+
+  return_getSize:
+  mov r0, r5
   ldmfd sp!, {r4-r11, pc}

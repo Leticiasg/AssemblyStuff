@@ -31,6 +31,15 @@ myprintf:
   bl processStr
   add sp, sp, #8
 
+  ldr r4, =buff
+  sub r4, r2, r4
+  ldr r5, [fp]
+  sub r5, r0, r5
+  sub r4, r4, r5
+  ldr r0, [fp]
+  bl getSize
+  add r4, r4, r0
+
   @ Arguments for syscall write
   ldr r1, =buff     @ const void * buff
   mov r0, #1        @ int fd = stdout 
@@ -38,6 +47,8 @@ myprintf:
   mov r7, #4        @ write is syscall #4
   svc #0            @ invoke syscall
 
+  add r0, r4, #1
+  
   @ Return from function
   ldmfd sp!, {r4-r11, pc}
 
@@ -56,7 +67,6 @@ myprintf:
 @            r3 = number returned by constant
 myPrintfHandler:
   stmfd sp!, {r4-r11, lr}
-  @mov fp, sp
 
   ldrb r4, [r0, #1]!  @ Loads the first char of the flag
 
@@ -250,6 +260,7 @@ myPrintfHandler:
     mov r1, #1
     b return
   case_s:
+    mov r4, #0
     ldr r1, [fp, r1]
     ldrb r5, [r1]
     cmp r5, #0
@@ -257,8 +268,10 @@ myPrintfHandler:
     for_s:
       strb r5, [r2], #1
       ldrb r5, [r1, #1]!
+      add r4, r4, #1
       cmp r5, #0
       bne for_s
+    mov r1, r4
     b return
   constant:
     stmfd sp!, {r1}

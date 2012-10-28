@@ -18,7 +18,7 @@ main:
   .data
   .align  4
 mystring:
-  .asciz  "%s My first string has only %d modifier.\n"
+  .asciz  "%s My first string has only %hhd modifier.\n"
   .asciz  "garbage"
 otherstring:
   .asciz "1"
