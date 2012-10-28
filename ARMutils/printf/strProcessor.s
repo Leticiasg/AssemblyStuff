@@ -10,6 +10,9 @@
 @ valid for scanf and printf
 
   .text
+
+@----------------------------------------------@
+
   .align 4
   .global processStr
   .type processStr, %function
@@ -57,6 +60,8 @@ processStr:
   .align 4
   .global getSize
   .type getSize, %function
+
+@----------------------------------------------@
 
 @ Arguments: r0 = pointer to the string
 @ Return : r0 = number of masks

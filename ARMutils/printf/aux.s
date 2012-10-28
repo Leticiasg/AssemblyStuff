@@ -7,6 +7,10 @@
 @---------------------------------@
 
 @ Auxiliary functions
+    
+    .text
+
+@----------------------------------------------@
 
     .align 4
     .global numToStr
@@ -22,39 +26,39 @@ numToStr:
     ldr r7, =num_map
     mov r8, r0
     sub r3, r3, #8
-    for_numToStr1:
-      ldr r4, [r3, #8]!
+    for_numToStr1:          @ Get the right value to
+      ldr r4, [r3, #8]!     @ compare in the vector    
       cmp r4, r2
       bhi for_numToStr1
     cmp r4, #0
     bhi for_numToStr2
-    add r3, r3, #4
-    for_numToStr3:
-      ldr r5, [r3, #8]!
-      cmp r5, r1
+    sub r3, r3, #4
+    for_numToStr3:          @ If the number is small
+      ldr r5, [r3, #8]!     @ Get the right value to
+      cmp r5, r1            @ compare in the vector
       bhi for_numToStr3
       sub r3, r3, #4
     for_numToStr2:
       mov r6, #0            @ Digit Counter
-      ldr r4, [r3], #4
-      ldr r5, [r3], #4
-      cmp r4, #0x42
+      ldr r4, [r3], #4      @ High part of the vector of value
+      ldr r5, [r3], #4      @ Low part of the vector of values
+      cmp r4, #0x42         @ Answer to Life, Universe and EVERITHING
       beq return_numToStr
       do_numToStr:
         @ 64bit Subtraction
         cmp r2, r4
-        addge r6, r6, #1
+        addge r6, r6, #1    @ Final digit
         blt store_numToStr
-        cmp r2, #0
+        cmp r2, #0          @ if r2 == 0
         beq end_if_numToStr
           subs r1, r1, r5
           sbc r2, r2, r4
           cmp r2, r4
           bhi do_numToStr
           blo store_numToStr
-          cmp r1, r5
-          bhs do_numToStr
-          b store_numToStr
+          cmp r1, r5          @ I have no Idea
+          bhs do_numToStr     @ what is happening 
+          b store_numToStr    @ here, DO NOT TOUCH !!
         end_if_numToStr:
         cmp r1, r5
         subcc r6, r6, #1
@@ -64,17 +68,20 @@ numToStr:
         bcs do_numToStr
       @ Stores number
       store_numToStr:
-      ldrb r6, [r7, r6]
-      strb r6, [r0], #1
+      ldrb r6, [r7, r6]       @ Converts to ASCII char
+      strb r6, [r0], #1       @ Stores the ASCII char
       b for_numToStr2
     
     return_numToStr:
     sub r1, r0, r8      @ Number of elements added to the buffer
     ldmfd sp!, {r4-r11, pc}
 
+@----------------------------------------------@
+
     .align 4
     .global mod
     .type mod, %function
+
 @ Returns in r0 the result of r0 % r1
 mod:
   stmfd sp!, {r4-r11, lr}
@@ -87,10 +94,13 @@ mod:
   add r0, r0, r1
   ldmfd sp!, {r4-r11, pc}
 
+@----------------------------------------------@
+
   .align 4
   .global strToNum
   .type strToNum, %function
 
+@ Converts a given string to a 10 base number
 @ Arguments: r0 = pointer to the end of the buffer
 @ Return: r1 = coverted number
 strToNum:
@@ -113,6 +123,12 @@ strToNum:
   sub r0, r0, #2
   @ Return from function
   ldmfd sp!, {r4-r11, pc}
+
+@-----------------------------------------------@
+@                                               @
+@                   DATA                        @
+@                                               @
+@-----------------------------------------------@
 
   .align 4
   .data

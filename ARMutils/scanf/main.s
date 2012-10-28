@@ -24,9 +24,9 @@ __mainend:
   .data
   .align  4
 mystring:
-  .asciz "%+4u is the number that myscanf returned\n"
+  .asciz "%x is the number that myscanf returned\n"
 scanfstring:
-  .asciz "%hhd"
+  .asciz "%d"
 res:
   .word 0
 res2:

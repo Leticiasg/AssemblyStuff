@@ -9,6 +9,9 @@
 @ Myprintf function
 
   .text
+
+@----------------------------------------------@
+
   .align  4
   .global myprintf
   .type myprintf, %function
@@ -31,6 +34,7 @@ myprintf:
   bl processStr
   add sp, sp, #8
 
+  @ Number of elements successfuly added
   ldr r4, =buff
   sub r4, r2, r4
   ldr r5, [fp]
@@ -56,7 +60,10 @@ myprintf:
   .global myPrintfHandler
   .type myPrintfHandler, %function
 
+@----------------------------------------------@
 
+@ This is the MEGAZORD recursive function that handles the
+@ flags and modifiers
 @ Arguments: r0 = pointer to the end of the string
 @            r1 = shift on buffer of arguments of myprintf
 @            r2 = pointer to the end of the buffer
@@ -280,12 +287,48 @@ myPrintfHandler:
     bl strToNum
     mov r4, r1
     ldmfd sp!, {r1}
+    mov r5, r0
     bl myPrintfHandler
     mov r3, r4
+    mov r6, r0
+    mov r0, r5
+    bl constantDeal
+    mov r0, r6
     b return
 
   return:
   ldmfd sp!, {r4-r11, pc}
+
+@----------------------------------------------@
+
+@ This function deals with the case where the format is of the 
+@ type %[constant]
+@ Arguments: r0 = pointer to the end of the string
+@            r2 = pointer to the end of the buffer modified
+@            r1 = number of elements added to the buffer
+@            r3 = number returned by constant
+@ Return:    r0 = pointer to the end of the string
+@            r2 = pointer to the end of the buffer modified
+@            r1 = number of elements added to the buffer
+@            r3 = number returned by constant
+constantDeal:
+  stmfd sp!, {r4-r11, lr}
+
+  ldrb r4, [r0, #-1]
+  cmp r4, #'%'
+  bne return_constantDeal
+  stmfd sp!, {r0,r3}
+  mov r0, r2
+  mov r2, r3
+  mov r3, #' '
+  bl addCharBeforeNumber
+  mov r2, r0
+  ldmfd sp!, {r0,r3}
+
+  return_constantDeal:
+  ldmfd sp!, {r4-r11, pc}
+
+@----------------------------------------------@
 
 @ Adds a char passed in r3 after a number
 @ Arguments: r0 = pointer to the end of the buffer
@@ -308,6 +351,8 @@ addCharAfterNumber:
   @ Return from function
   return_add_char:
   ldmfd sp!, {r4-r11, pc}
+
+@----------------------------------------------@
 
 @ Arguments: r0 = pointer to the end of the buffer
 @            r1 = size of the number on the string
@@ -349,6 +394,13 @@ addCharBeforeNumber:
   @ Return from function
   return_add:
   ldmfd sp!, {r4-r11, pc}
+
+
+@-----------------------------------------------@
+@                                               @
+@                   DATA                        @
+@                                               @
+@-----------------------------------------------@
 
   .align 4
   .data
