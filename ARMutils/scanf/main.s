@@ -11,8 +11,8 @@ main:
   ldr r2, =res2
   bl  myscanf
   ldr r0, =mystring
-  ldr r2, =res
-  ldr r2, [r2]
+  ldr r1, =res
+  ldr r1, [r1]
   ldr r3, =res2
   ldr r3, [r3]
   bl  myprintf
@@ -24,9 +24,9 @@ __mainend:
   .data
   .align  4
 mystring:
-  .asciz "%llu is the number that myscanf returned\n"
+  .asciz "%+4u is the number that myscanf returned\n"
 scanfstring:
-  .asciz "%Ld"
+  .asciz "%hhd"
 res:
   .word 0
 res2:

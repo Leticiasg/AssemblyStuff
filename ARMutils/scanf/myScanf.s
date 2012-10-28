@@ -160,7 +160,6 @@ scanfHandler:
     mov r0, r2
     mov r2, #10
     bl readNumber64
-      
       cmp r2, #1
       bne end_if_case_d     @ If number is negative
       ldr r5, =0xFFFFFFFF
@@ -316,84 +315,6 @@ storeNumber64:
     str r3, [r2]
 
   return_storeNumber64:
-  ldmfd sp!, {r4-r11, pc}
-  
-
-@ This function reads a string from stdin that represents a number
-@ and returns it in r0
-@ Arguments:  r0 = max number to be read
-@             r1 = address to store number readed
-@             r2 = base of the number
-@ Return: r0 = Number readed
-@         r1 = pointer to the beggining of the buffer
-@         r2 = 1 if number is negative - 0 if it isn't
-readNumber:
-  stmfd sp!, {r4-r11, lr}
-  
-  stmfd sp!, {r0-r3}
-  ldr r0, =auxBuffer    @ Loads auxiliar buffer
-  bl readString
-  mov r4, r0            @ Pointer to the beginning of the string readed is in r4
-  mov r5, r1            @ Pointer to the end of the string readed is in r5
-  ldmfd sp!, {r0-r3}
-
-  mov r10, #0
-  mov r9, #1            @ Base
-  mov r7, #0            @ Final Number
-  sub r6, r5, r4        @ Size of the string readed is in r6
-  cmp r6, #0
-  beq return_readNumber
-  for_readNumber:
-    sub r5, r5, #1
-    cmp r5, r4
-    blo return_readNumber
-    stmfd sp!, {r0-r3}
-    mov r0, r5
-    bl charToNum
-    mov r8, r0
-    mov r10, r1
-    ldmfd sp!, {r0-r3}
-    mul r8, r9, r8
-    add r7, r7, r8
-    muls r9, r2, r9
-    bvs return_readNumber
-    cmp r9, r0
-    bhs return_readNumber
-    b for_readNumber
-
-  @ Return from function
-  return_readNumber:
-  mov r2, r7
-  bl storeNumber
-  mov r0, r7
-  mov r1, r5
-  mov r2, r10
-  ldmfd sp!, {r4-r11, pc}
-
-@ Arguments:  r0 = max number to be read
-@             r1 = address to store number readed
-@             r2 = number to be stored
-storeNumber:
-  stmfd sp!, {r4-r11, lr}
-  
-  ldr r4, =256
-  cmp r0, r4
-  beq storeByte
-  ldr r4, =65536
-  cmp r0, r4
-  beq storeHalf
-  b store32Bit
-
-  storeByte:
-    strb r2, [r1]
-    b return_storeNumber
-  storeHalf:
-    strh r2, [r1]
-    b return_storeNumber
-  store32Bit:
-    str r2, [r1]
-
-  return_storeNumber:
   ldmfd sp!, {r4-r11, pc}
   
 
