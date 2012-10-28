@@ -20,34 +20,55 @@ numToStr:
     stmfd sp!, {r4-r11, lr}
   
     ldr r7, =num_map
-    mov r8, #0
-    for_numToStr:
+    mov r8, r0
+    sub r3, r3, #8
+    for_numToStr1:
+      ldr r4, [r3, #8]!
+      cmp r4, r2
+      bhi for_numToStr1
+    cmp r4, #0
+    bhi for_numToStr2
+    add r3, r3, #4
+    for_numToStr3:
+      ldr r5, [r3, #8]!
+      cmp r5, r1
+      bhi for_numToStr3
+      sub r3, r3, #4
+    for_numToStr2:
       mov r6, #0            @ Digit Counter
       ldr r4, [r3], #4
       ldr r5, [r3], #4
       cmp r4, #0x42
       beq return_numToStr
-      mov r9, r1
-      mov r10, r2
       do_numToStr:
         @ 64bit Subtraction
-        subs r9, r9, r5
-        sbc r10, r10, r4
-        add r6, r6, #1
-        cmp r10, #0
-        bge do_numToStr
+        cmp r2, r4
+        addge r6, r6, #1
+        blt store_numToStr
+        cmp r2, #0
+        beq end_if_numToStr
+          subs r1, r1, r5
+          sbc r2, r2, r4
+          cmp r2, r4
+          bhi do_numToStr
+          cmp r1, r5
+          bhs do_numToStr
+          b store_numToStr
+        end_if_numToStr:
+        cmp r1, r5
+        subcc r6, r6, #1
+        bcc store_numToStr
+        subs r1, r1, r5
+        cmp r1, r5
+        bcs do_numToStr
       @ Stores number
-      sub r6, r6, #1
-      adds r1, r9, r5
-      adc r2, r10, r4
-      orr r8, r6, r8
-      cmp r8, #0
-      beq for_numToStr
+      store_numToStr:
       ldrb r6, [r7, r6]
       strb r6, [r0], #1
-      b for_numToStr
-
+      b for_numToStr2
+    
     return_numToStr:
+    sub r1, r0, r8      @ Number of elements added to the buffer
     ldmfd sp!, {r4-r11, pc}
 
     .align 4
@@ -99,7 +120,7 @@ num_map:
   
   .global division_map_dec
 division_map_dec:
-  .word 0x8AC72304, 0x89E80000, 0xDE0B6B3, 0xA7640000, 0x1634578, 0x5D8A0000, 0x2386F2, 0x6FC10000, 0x38D7E,0xA4C68000, 0x5AF3, 0x107A4000, 0x918, 0x4E72A000, 0xE8, 0xD4A51000, 0x17, 0x4876E800, 0x2, 0x540BE400, 0x3, 0xB9ACA00, 0x0, 0x5F5E100, 0x0, 0x989680, 0x0, 0xF4240, 0x0, 0x186A0, 0x0, 0x2710, 0x0, 0x3E8, 0x0, 0x64, 0x0, 0xA, 0x0, 0x1, 0x42, 0x42
+  .word 0x8AC72304, 0x89E80000, 0xDE0B6B3, 0xA7640000, 0x1634578, 0x5D8A0000, 0x2386F2, 0x6FC10000, 0x38D7E,0xA4C68000, 0x5AF3, 0x107A4000, 0x918, 0x4E72A000, 0xE8, 0xD4A51000, 0x17, 0x4876E800, 0x2, 0x540BE400, 0x0, 0x3B9ACA00, 0x0, 0x5F5E100, 0x0, 0x989680, 0x0, 0xF4240, 0x0, 0x186A0, 0x0, 0x2710, 0x0, 0x3E8, 0x0, 0x64, 0x0, 0xA, 0x0, 0x1, 0x42, 0x42
   
   .global division_map_hex
 division_map_hex:

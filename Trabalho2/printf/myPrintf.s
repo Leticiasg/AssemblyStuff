@@ -50,7 +50,8 @@ myprintf:
 @            r1 = shift on buffer of arguments of myprintf
 @            r2 = pointer to the end of the buffer
 @            r3 = second argument of myprintf
-@ Return:    r2 = pointer to the end of the buffer modified
+@ Return:    r0 = pointer to the end of the string
+@            r2 = pointer to the end of the buffer modified
 @            r1 = number of elements added to the buffer
 @            r3 = number returned by constant
 myPrintfHandler:
@@ -98,8 +99,16 @@ myPrintfHandler:
   case_plus: 
     bl myPrintfHandler
     stmfd sp!, {r0,r3}
+    mov r4, r3
     mov r0, r2
-    mov r2, r3
+    ldr r5, [r0, -r1]
+    cmp r5, #'-'
+    beq endif_case_plus
+    add r2, r1, #1
+    mov r3, #'+'
+    bl addCharBeforeNumber
+    endif_case_plus:
+    mov r2, r4
     mov r3, #' '
     add r1, r1, #1
     bl addCharBeforeNumber
@@ -109,40 +118,54 @@ myPrintfHandler:
   case_h:
     stmfd sp!, {r3}
     ldrb r4, [r0, #1]!
+    ldr r7, [fp, r1]
     cmp r4, #'h'
     beq case_hh
     sub r0, r0, #1
-    ldr r3, =0xFFFF
-    and r1, r1, r3
+    ldr r5, =0xFFFF
+    and r7, r7, r5
     cmp r4, #'d'
-    bne signed_h
+    beq signed_h
     cmp r4, #'i'
-    bne signed_h
-    bl myPrintfHandler
-    ldmfd sp!, {r3}
-    b return
+    beq signed_h
+    unsigned:
+      str r7, [fp, r1]
+      bl myPrintfHandler
+      ldmfd sp!, {r3}
+      b return
     signed_h:
-    ldr r3, =0xFFFF0000
-    add r1, r1, r3
-    bl myPrintfHandler
-    ldmfd sp!, {r3}
-    b return
+      cmp r7, #0x8000
+      blt unsigned
+        ldr r6, =0xFFFF0000
+        add r7, r7, r6
+        add r3, r6, r5
+        str r7, [fp,r1]
+        bl myPrintfHandler
+        ldmfd sp!, {r3}
+        b return
   case_hh:
-    and r1, r1, #0xFF
     ldrb r4, [r0, #1]
+    ldr r5, =0xFF
+    and r7, r7, r5
     cmp r4, #'d'
-    bne signed_hh
+    beq signed_hh
     cmp r4, #'i'
-    bne signed_hh
-    bl myPrintfHandler
-    ldmfd sp!, {r3}
-    b return
+    beq signed_hh
+    unsigned_hh:
+      str r7, [fp, r1]
+      bl myPrintfHandler
+      ldmfd sp!, {r3}
+      b return
     signed_hh:
-    ldr r3, =0xFFFFFF00
-    add r1, r1, r3
-    bl myPrintfHandler
-    ldmfd sp!, {r3}
-    b return
+      cmp r7, #0x80
+      blt unsigned
+      ldr r6, =0xFFFFFF00
+      add r7, r7, r6
+      add r3, r6, r5
+      str r7, [fp, r1]
+      bl myPrintfHandler
+      ldmfd sp!, {r3}
+      b return
   case_l:
     ldrb r4, [r0, #1]!
     cmp r4, #'l'
@@ -170,18 +193,24 @@ myPrintfHandler:
   case_d:
   case_i:
     stmfd sp!, {r0, r3}
+    ldr r5, =0xFFFFFFFF
+    ldr r1, [fp, r1]
+    cmp r3, #0
+    bgt end_invert          @ Adds the signal '-' to the string
+    mov r5, r3
     cmp r1, #0
-    bge end_invert          @ Adds the signal '-' to the string
-      mov r3, #'-'
-      strb r3, [r2], #1
-      ldr r3, =0xFFFFFFFF
-      eor r1, r3, r1
-      add r1, r1, #1
+    bge end_invert
+      mov r4, #'-'
+      strb r4, [r2], #1
+      ldr r4, =0xFFFFFFFF
+      eor r1, r4, r1
+      eor r3, r5, r3
+      adds r1, r1, #1
+      adc r3, r3, #0
     end_invert:
     mov r0, r2
-    ldr r1, [fp, r1]
     mov r2, r3
-    ldr r0, =division_map_dec
+    ldr r3, =division_map_dec
     bl numToStr
     mov r2, r0
     ldmfd sp!, {r0, r3}
@@ -234,9 +263,10 @@ myPrintfHandler:
   constant:
     stmfd sp!, {r1}
     bl strToNum
-    mov r3, r1
+    mov r4, r1
     ldmfd sp!, {r1}
     bl myPrintfHandler
+    mov r3, r4
     b return
 
   return:
