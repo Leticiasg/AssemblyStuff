@@ -10,10 +10,13 @@ main:
   ldr r1, =res
   ldr r2, =res2
   bl  myscanf
-  ldr r9, =res
-  ldr r9, [r9]
-  ldr r9, =res2
-  ldr r9, [r9]
+  ldr r0, =mystring
+  ldr r2, =res
+  ldr r2, [r2]
+  ldr r3, =res2
+  ldr r3, [r3]
+  bl  myprintf
+  mov r0, #0
 __mainend:
   mov r7, #1
   svc 0
@@ -21,15 +24,10 @@ __mainend:
   .data
   .align  4
 mystring:
-  .asciz  "%s My first string has only %lld modifier.\n"
-  .asciz  "garbage"
-otherstring:
-  .asciz "1"
-otherstring2:
-  .asciz "Fuck Life !!!!"
+  .asciz "%llu is the number that myscanf returned\n"
 scanfstring:
-  .asciz "as %d"
+  .asciz "%Ld"
 res:
-  .word 123
+  .word 0
 res2:
-  .word 123
+  .word 0
