@@ -166,8 +166,8 @@ scanfHandler:
       ldr r5, =0xFFFFFFFF
       eor r0, r0, r5
       eor r3, r3, r5
-      add r0, r0, #1
-      add r3, r3, #1
+      adds r0, r0, #1
+      adc r3, r3, #0
       stmfd sp!, {r0}
       mov r2, r4
       bl storeNumber64
