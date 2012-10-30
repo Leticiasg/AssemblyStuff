@@ -157,9 +157,9 @@ scanfHandler:
     b return
   case_L:
     stmfd sp!, {r1-r3}
-    ldr r4, [fp, #-40]
+    ldr r4, [fp, #-44]
     add r4, r4, #4
-    str r4, [fp, #-40]
+    str r4, [fp, #-44]
     ldr r2, =0x0
     bl scanfHandler
     ldmfd sp!, {r1-r3}

@@ -206,6 +206,8 @@ myPrintfHandler:
     ldr r3, [fp, r4]
     bl myPrintfHandler
     ldmfd sp!, {r3}
+    mov r7, #88
+    str r4, [fp, -r7]
     b return
   case_d:
   case_i:
@@ -265,6 +267,7 @@ myPrintfHandler:
     ldmfd sp!, {r0,r3}
     b return
   case_c:
+    ldrb r1, [fp, r1]
     strb r1, [r2], #1
     mov r1, #1
     b return
