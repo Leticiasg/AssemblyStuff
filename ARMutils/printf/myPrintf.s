@@ -410,7 +410,7 @@ case_array:
 addr_array:
     .word case_0, case_minus, case_plus, case_h, case_l, case_d, case_i, case_u, case_o, case_x, case_c, case_s
   
-  .equ MAX_BUFFER_SIZE, 128
+  .equ MAX_BUFFER_SIZE, 512
 
   .align 4
   .global buff

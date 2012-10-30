@@ -386,7 +386,7 @@ getChar:
   .data
   .align 4
 
-  .equ MAX_BUFFER_SIZE, 128
+  .equ MAX_BUFFER_SIZE, 512
 
 auxWord:
   .word 0
