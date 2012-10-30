@@ -344,7 +344,20 @@ readString:
   mov r4, r0
   mov r6, r0
   ldr r0, =auxChar
-  while_readString:
+  
+  bl getChar
+  ldrb r5, [r0]
+  cmp r5, #'\n'
+  beq while_readString
+  cmp r5, #'\t'
+  beq while_readString
+  cmp r5, #' '
+    
+  beq while_readString
+
+  strb r5, [r4], #1
+ 
+ while_readString:
     bl getChar
     ldrb r5, [r0]
     cmp r5, #'\n'
@@ -361,6 +374,8 @@ readString:
   return_readString:
   mov r0, r6
   mov r1, r4
+  mov r5, #0
+  strb r5, [r4], #1
   ldmfd sp!, {r4-r11, pc}
   
 
