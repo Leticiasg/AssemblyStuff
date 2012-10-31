@@ -345,15 +345,16 @@ readString:
   mov r6, r0
   ldr r0, =auxChar
   
+  @ Discard blank spaces
+  discard_Spaces:
   bl getChar
   ldrb r5, [r0]
   cmp r5, #'\n'
-  beq while_readString
+  beq discard_Spaces
   cmp r5, #'\t'
-  beq while_readString
+  beq discard_Spaces
   cmp r5, #' '
-    
-  beq while_readString
+  beq discard_Spaces
 
   strb r5, [r4], #1
  
