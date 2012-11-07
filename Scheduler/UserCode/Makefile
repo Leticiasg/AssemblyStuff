@@ -31,5 +31,5 @@ user-ia32: user.c
 	gcc user.c -o user-ia32
 
 clean:
-	-rm *.o user user.s user.se user-ia32 usuario.o
+	-rm *.o
 
