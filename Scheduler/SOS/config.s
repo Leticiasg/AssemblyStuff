@@ -33,23 +33,22 @@
 .equ ABT_STACK, 0x7A00
 .equ IRQ_STACK, 0x7B00
 .equ FIQ_STACK, 0x7C00
-
-.equ USR_STACK1, 0x00010000 @ Início da pilha do PID 1
-.equ SVC_STACK1, 0x0000F800 @ Início da pilha do modo supervisor de PID 1
-.equ USR_STACK2, 0x0000F000 @ Início da pilha do PID 2
-.equ SVC_STACK2, 0x0000E800 @ Início da pilha do modo supervisor de PID 2
-.equ USR_STACK3, 0x0000E000 @ Início da pilha do PID 3
-.equ SVC_STACK3, 0x0000D800 @ Início da pilha do modo supervisor de PID 3
-.equ USR_STACK4, 0x0000D000 @ Inicio da pilha do PID 4
-.equ SVC_STACK4, 0x0000C800 @ Inicio da pilha do modo supervisor de PID 4
-.equ USR_STACK5, 0x0000C000 @ Inicio da pilha do PID 5
-.equ SVC_STACK5, 0x0000B800 @ Inicio da pilha do modo supervisor de PID 5
-.equ USR_STACK6, 0x0000B000 @ Inicio da pilha do PID 6
-.equ SVC_STACK6, 0x0000A800 @ Inicio da pilha do modo supervisor de PID 6
-.equ USR_STACK7, 0x0000A000 @ Inicio da pilha do PID 7
-.equ SVC_STACK7, 0x00009800 @ Inicio da pulha do modo supervisor de PID 7
-.equ USR_STACK8, 0x00009000 @ Início da pilha do PID 8
-.equ SVC_STACK8, 0x00008800 @ Início da pilha do modo supervisor de PID 8
+.equ USR_STACK1, 0x00010000 @ Begin of the stack from PID 1
+.equ SVC_STACK1, 0x0000F800 @ Begin of the stack from supervisor mode of PID 1
+.equ USR_STACK2, 0x0000F000 @ Begin of the stack from PID 2
+.equ SVC_STACK2, 0x0000E800 @ Begin of the stack from supervisor mode of PID 2
+.equ USR_STACK3, 0x0000E000 @ Begin of the stack from PID 3
+.equ SVC_STACK3, 0x0000D800 @ Begin of the stack from supervisor mode of PID 3
+.equ USR_STACK4, 0x0000D000 @ Begin of the stack from PID 4
+.equ SVC_STACK4, 0x0000C800 @ Begin of the stack from supervisor mode of PID 4
+.equ USR_STACK5, 0x0000C000 @ Begin of the stack from PID 5
+.equ SVC_STACK5, 0x0000B800 @ Begin of the stack from supervisor mode of PID 5
+.equ USR_STACK6, 0x0000B000 @ Begin of the stack from PID 6
+.equ SVC_STACK6, 0x0000A800 @ Begin of the stack from supervisor mode of PID 6
+.equ USR_STACK7, 0x0000A000 @ Begin of the stack from PID 7
+.equ SVC_STACK7, 0x00009800 @ Begin of the stack from supervisor mode of PID 7
+.equ USR_STACK8, 0x00009000 @ Begin of the stack from PID 8
+.equ SVC_STACK8, 0x00008800 @ Begin of the stack from supervisor mode of PID 8
 
 @ UART control Constants
 .equ UART1_UTXD, 0x53FBC040
@@ -137,6 +136,9 @@ Start_TZIC:
 @              STACK              @
 @                                 @
 @---------------------------------@
+
+@ Starts the stack with parameters of the process
+@ of PID 1
 
   .align 4
   .global Start_Stack

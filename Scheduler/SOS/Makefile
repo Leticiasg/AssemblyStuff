@@ -11,13 +11,14 @@ OUTPUT=sos
 all: sos
 
 sos:	$(OBJ)
-	$(LD) $(LD_FLAGS) $(OBJ) -o $(OUTPUT)
+#	$(LD) $(LD_FLAGS) $(OBJ) -o $(OUTPUT)
 
 %.o: %.s
 	$(AS) $(AS_FLAGS) $< -o $@
 
 clean:
-	rm $(OBJ) $(OUTPUT)
+#	rm $(OBJ) $(OUTPUT)
+	rm $(OBJ)
 
 gdbtarget: all
 	arm-sim --load-sys=$(OUTPUT) -degub-core -enable-gdb -cycles=1000

@@ -26,7 +26,8 @@ RESET:
 
   @ Enable interruptions, set ARM mode to USR, and jump to 0x8000
   msr CPSR_c, #0x10
-  b 0x8000
+ @ b 0x8000
+  b main
 
 @------------------------------------------------@
 
