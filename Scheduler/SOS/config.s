@@ -51,7 +51,7 @@
 .equ SVC_STACK8, 0x00008800 @ Begin of the stack from supervisor mode of PID 8
 
         
-.global USR _STACK1
+.global USR_STACK1
 .global SVC_STACK1
 .global USR_STACK2
 .global SVC_STACK2
