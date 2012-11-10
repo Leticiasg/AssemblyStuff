@@ -26,8 +26,8 @@ RESET:
 
   @ Enable interruptions, set ARM mode to USR, and jump to 0x8000
   msr CPSR_c, #0x10
- @ b 0x8000
-  b main
+  b 0x8000
+ @ b main
 
 @------------------------------------------------@
 
@@ -38,8 +38,12 @@ SOFTWARE_INTERUPT:
   
   cmp r7, #1
   bleq Sos_exit
+  cmp r7, #2
+  bleq Sos_fork
   cmp r7, #4
   bleq Sos_write
+  cmp r7, #20
+  bleq Sos_getpid
 
   ldmfd sp!, {r4-r11, lr}
   movs pc, lr

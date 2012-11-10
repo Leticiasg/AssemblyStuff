@@ -4,7 +4,7 @@ AS_FLAGS= -g
 LD_FLAGS= -g -Ttext=0x0
 
 USER_OBJ=UserCode/usuario.o
-SOS_OBJ=$(wildcard SOS/*.o)
+SOS_OBJ=SOS/sos.o
 OUTPUT=prog
 
 all: prog
