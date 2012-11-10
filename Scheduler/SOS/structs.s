@@ -28,11 +28,13 @@ PID:
   .byte 1,2,3,4,5,6,7,8
   .global PID
 
+  .align 4
 @ Status de execucao do processo
 process_status: 
   .byte 0,0,0,0,0,0,0,0
   .global process_status
 
+  .align 4
 @ Apontadores para o vetor de registradores do modo user
 usr_registers:
   .word  usr1_registers,usr2_registers,usr3_registers,usr4_registers,usr5_registers,usr6_registers,usr7_registers,usr8_registers
