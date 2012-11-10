@@ -35,7 +35,7 @@ svc_sp:
 @-----------------------------@
 
   .align 4
-  .data
+
 @ Process ID dos processos
 PID: 
   .byte 1,2,3,4,5,6,7,8

@@ -34,5 +34,4 @@ __get_running_pid:
   add r0, r4, #1            @ PID value in return register
 
 __return_Sos_getpid:
-  ldmfd sp!, {r4-r11, lr}
-  movs pc, lr
+  ldmfd sp!, {r4-r11, pc}

@@ -67,8 +67,7 @@
 .global SVC_STACK7
 .global USR_STACK8
 .global SVC_STACK8
-
-        
+       
 @ UART control Constants
 .equ UART1_UTXD, 0x53FBC040
 .equ UART1_UCR1, 0x53FBC080
@@ -220,3 +219,21 @@ Start_UART:
   str r1, [r0]
 
   mov pc, lr
+
+@---------------------------------@
+@                                 @
+@            Process              @
+@                                 @
+@---------------------------------@
+
+  .align 4
+  .global Start_process
+
+Start_process:
+  stmfd sp!, {r4-r11,lr}
+
+  ldr r5, =process_status
+  mov r4, #2
+  strb r4, [r5]
+
+  ldmfd sp!, {r4-r11, pc}

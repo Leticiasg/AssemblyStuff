@@ -9,7 +9,7 @@ cflags=-g -O0
 all:	usuario.o
 
 usuario.o: user.o modsi3.o divsi3.o syswrapper.o
-	$(arm-ld) $(ldflags) -r user.o syswrapper.o modsi3.o divsi3.o -o usuario.o
+#	$(arm-ld) $(ldflags) -r user.o syswrapper.o modsi3.o divsi3.o -o usuario.o
 
 user.s: user.c
 	$(arm-cc) -c -S $(cflags) user.c -o user.s
