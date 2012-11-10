@@ -4,9 +4,9 @@
   .align 4
   .data
 
-.equ WAITING, #0
-.equ READY, #1
-.equ RUNNING, #2
+.equ WAITING, 0
+.equ READY, 1
+.equ RUNNING, 2
 
 PID: 
   .byte 1,2,3,4,5,6,7,8
@@ -59,6 +59,8 @@ svc8_registers:
 
 .global PID
 .global process_status 
+.global usr_registers
+.global svc_registers
 .global usr1_registers
 .global usr2_registers
 .global usr3_registers
