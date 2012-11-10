@@ -8,10 +8,18 @@
 _start:
 .org 0x0
   b RESET
+.org 0x4
+  b UNDEFINED_INSTRUCTION
 .org 0x8
   b SOFTWARE_INTERUPT
+.org 0x0C
+  b ABORT
+.org 0x10
+  b ABORT
 .org 0x18
   b IRQ
+.org 0x1C
+  b FIQ
 
 @------------------------------------------------@
   
@@ -23,17 +31,29 @@ RESET:
   bl Start_TZIC
   bl Start_Stack
   bl Start_UART
+  bl Start_process
 
   @ Enable interruptions, set ARM mode to USR, and jump to 0x8000
   msr CPSR_c, #0x10
-  b 0x8000
- @ b main
+ @ b 0x8000
+  b main
+
+@------------------------------------------------@
+  
+  .align 4
+
+@ NOT IMPLEMENTED YET 
+
+UNDEFINED_INSTRUCTION:
+  mov r0, #1
+  b UNDEFINED_INSTRUCTION
 
 @------------------------------------------------@
 
   .align 4
 
 SOFTWARE_INTERUPT:
+  msr CPSR_c, #0xD3
   stmfd sp!, {r4-r11, lr}
   
   cmp r7, #1
@@ -47,6 +67,16 @@ SOFTWARE_INTERUPT:
 
   ldmfd sp!, {r4-r11, lr}
   movs pc, lr
+
+@------------------------------------------------@
+  
+  .align 4
+
+@ NOT IMPLEMENTED YET
+
+ABORT:
+  mov r0, #1
+  b ABORT
 
 @------------------------------------------------@
 
@@ -70,5 +100,19 @@ _call_scheduler:
   mov r0, sp
   b  scheduler @ chama o escalonador
 _return_IRQ:
-  ldmfd sp!, {r0-r12, lr}
-  movs  pc, lr
+        
+  ldmfd sp!, {r0-r12, lr} 
+@ Change mode back to user mode
+  msr CPSR_c, #0x10
+@ Return from function  
+  movs pc, lr
+
+@------------------------------------------------@
+  
+  .align 4
+ 
+@ NOT IMPLEMENTED YET 
+
+FIQ:
+  mov r0, #1
+  b FIQ

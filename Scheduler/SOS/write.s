@@ -33,5 +33,4 @@ __is_queue_ready:
   cmp r1, r9
   bne __is_queue_ready
 
-  ldmfd sp!, {r4-r11, lr}
-  movs pc, lr
+  ldmfd sp!, {r4-r11, pc}
