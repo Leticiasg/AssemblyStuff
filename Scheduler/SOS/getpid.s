@@ -1,3 +1,15 @@
+@---------------------------------@
+@                                 @
+@          Developed by           @
+@       Tiago Lobato Gimenes      @
+@                                 @
+@---------------------------------@
+@                                 @
+@            SYSCALLS             @
+@        IMPLEMENTATIONS          @
+@                                 @
+@---------------------------------@
+
   .align 4
   .global Sos_getpid
 

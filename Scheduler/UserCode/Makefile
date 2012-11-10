@@ -3,7 +3,7 @@ arm-as=arm-elf-as
 arm-ld=arm-elf-ld
 arm-cc=arm-elf-gcc
 asflags=-g
-ldflags=-g
+ldflags=-g -Ttext=0x8000
 cflags=-g -O0
 
 all:	usuario.o
