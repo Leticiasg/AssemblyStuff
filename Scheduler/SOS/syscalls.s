@@ -28,15 +28,28 @@ __is_queue_ready:
   cmp r1, r9
   bne __is_queue_ready
 
-  ldmfd sp!, {r4-r11, pc}
+  ldmfd sp!, {r4-r11, lr}
+  movs pc, lr
 
 @------------------------------------------------@
 
   .align 4
   .global Sos_exit
 
-@ FINISH !!!
-
 Sos_exit:
-  mov r0, #0
-  b Sos_exit
+  stmfd sp!, {r4-r11, lr}
+
+  ldr r5, =process_status
+  mov r4, r5
+__get_current:
+  ldrb r6, [r5, #1]!
+  cmp r6, CURRENT
+  bne __get_current
+
+  sub r4, r5, r4        @ Index is in r4
+  
+  mov r6, INACTIVE
+  strb r6, [r5, r4]
+
+  ldmfd sp!, {r4-r11, lr}
+  movs pc, lr

@@ -4,45 +4,78 @@
   .align 4
   .data
 
+.equ INACTIVE, #0
+.equ ACTIVE, #1
+.equ CURRENT, #2
+
 PID: 
   .byte 1,2,3,4,5,6,7,8
 process_status: 
   .byte 0,0,0,0,0,0,0,0
-_usr_registers:
-  .word  _usr1_registers,_usr2_registers,_usr3_registers,_usr4_registers,_usr5_registers,_usr6_registers,_usr7_registers,_usr8_registers
-_svc_registers: 
-  .word _svc1_registers,_svc2_registers,_svc3_registers,_svc4_registers,_svc5_registers,_svc6_registers,_svc7_registers,_svc8_registers
+usr_registers:
+  .word  usr1_registers,usr2_registers,usr3_registers,usr4_registers,usr5_registers,usr6_registers,usr7_registers,usr8_registers
+svc_registers: 
+  .word svc1_registers,svc2_registers,svc3_registers,svc4_registers,svc5_registers,svc6_registers,svc7_registers,svc8_registers
 
-_usr1_registers: 
+usr1_registers: 
   .fill 15, 4, 0 
-_usr2_registers:
+usr2_registers:
   .fill 15, 4, 0
-_usr3_registers:
+usr3_registers:
   .fill 15, 4, 0
-_usr4_registers:
+usr4_registers:
   .fill 15, 4, 0
-_usr5_registers:  
+usr5_registers:  
   .fill 15, 4, 0
-_usr6_registers:
+usr6_registers:
   .fill 15, 4, 0
-_usr7_registers:
+usr7_registers:
   .fill 15, 4, 0
-_usr8_registers:
+usr8_registers:
   .fill 15, 4, 0
 
-_svc1_registers: 
+svc1_registers: 
   .fill 15, 4, 0
-_svc2_registers:
+svc2_registers:
   .fill 15, 4, 0
-_svc3_registers:
+svc3_registers:
   .fill 15, 4, 0
-_svc4_registers: 
+svc4_registers: 
   .fill 15, 4, 0
-_svc5_registers:
+svc5_registers:
   .fill 15, 4, 0
-_svc6_registers:
+svc6_registers:
   .fill 15, 4, 0
-_svc7_registers:
+svc7_registers:
   .fill 15, 4, 0
-_svc8_registers:
+svc8_registers:
   .fill 15, 4, 0
+
+@----------------------------------@
+@                                  @
+@         Global Constants         @
+@                                  @
+@----------------------------------@
+
+.global PID
+.global process_status 
+.global usr1_registers
+.global usr2_registers
+.global usr3_registers
+.global usr4_registers
+.global usr5_registers
+.global usr6_registers
+.global usr7_registers
+.global usr8_registers
+.global svc1_registers
+.global svc2_registers
+.global svc3_registers
+.global svc4_registers
+.global svc5_registers
+.global svc6_registers
+.global svc7_registers
+.global svc8_registers
+
+.global INACTIVE
+.global ACTIVE
+.global CURRENT
