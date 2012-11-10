@@ -50,6 +50,25 @@
 .equ USR_STACK8, 0x00009000 @ Begin of the stack from PID 8
 .equ SVC_STACK8, 0x00008800 @ Begin of the stack from supervisor mode of PID 8
 
+        
+.global USR _STACK1
+.global SVC_STACK1
+.global USR_STACK2
+.global SVC_STACK2
+.global USR_STACK3
+.global SVC_STACK3
+.global USR_STACK4
+.global SVC_STACK4
+.global USR_STACK5
+.global SVC_STACK5
+.global USR_STACK6
+.global SVC_STACK6
+.global USR_STACK7
+.global SVC_STACK7
+.global USR_STACK8
+.global SVC_STACK8
+
+        
 @ UART control Constants
 .equ UART1_UTXD, 0x53FBC040
 .equ UART1_UCR1, 0x53FBC080
