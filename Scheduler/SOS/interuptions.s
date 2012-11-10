@@ -54,9 +54,21 @@ SOFTWARE_INTERUPT:
 
 IRQ:
   @ GPT_SR <-- 1
+  sub   lr, lr, #4
+  stmfd sp!, {r0-r12, lr} @ salva o contexto na pilha de irq
+        
   ldr r0, =GPT_SR
+  ldr r2, [r0]
+  cmp r2, #100
+  beq _call_scheduler
   mov r1, #1
   str r1, [r0]
- 
-  sub lr, lr, #4
-  movs pc, lr
+  b   _return_IRQ
+_call_scheduler:        
+  eor r1, r1, r1
+  str r1, [r0]
+  mov r0, sp
+  b  scheduler @ chama o escalonador
+_return_IRQ:
+  ldmfd sp!, {r0-r12, lr}
+  movs  pc, lr

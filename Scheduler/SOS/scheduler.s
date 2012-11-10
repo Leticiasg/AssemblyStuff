@@ -5,11 +5,14 @@
   .global scheduler
         
 scheduler:
-  stmfd sp!, {r0-r12, lr}
-  mov   r0, sp
-  bl    _save_context
-  ldmfd sp!, {r0-r12, lr}
-
+  @ recebe em r0 o apontador para os registradores salvos na pilha
+  bl  _save_context @ salva o contexto do processo atual
+  mov sp, r0 @ desempilha r0-r12 e lr
+  ldr r0, =current_pid
+  ldr r0, [r0]
+  ldr r1, =process_status
+  mov r2, #READY
+  strb r2, [r1, r0] @ deixa o processo escalonado  
 
 _save_context:
   ldr r1, =usr_registers
@@ -28,17 +31,24 @@ __laco_save_usr_registers:
   cmp r4, #13
   blt __laco_save_usr_registers
 
-  @ muda para o modo supervisor, desabilitando interrupcoes      
-  msr cpsr_c, #0xd3 
-  str r13, [r2], #4
-  str r14, [r2], #4
-  str r15, [r2], #4
+  mrs r5, SPSR
+  str r5, [r1, #12] @ salva as flags do processo na posicao 16 do vetor usr
+  str r5, [r2, #12] @ salva as flags do processo na posicao 16 do vetor svc
+  ldr r5, [r0], #4  @ recupera o lr
 
-  @ muda para o modo supervisor, desabilitando interrupcoes
-  msr CPSR_c, #0xDF
-  str r13, [r1], #4
-  str r14, [r1], #4
-  str r15, [r1], #4
+  @ muda para o modo supervisor, desabilitando interrupcoes      
+  msr CPSR_c, #0xd3 
+  str r13, [r2], #4 @ salva o sp_svc
+  str r14, [r2], #4 @ salva o lr_svc
+  str r5, [r2], #4  @ salva o pc
+  mrs r6, SPSR      @ salva em r6 o valor de spsr_svc
+  str r6, [r2, #4]  
+
+  @ muda para o modo system, desabilitando interrupcoes
+  msr CPSR_c, #0xdf
+  str r13, [r1], #4 @ salva o sp_usr
+  str r14, [r1], #4 @ salva o lr_usr
+  str r5, [r1], #4  @ salva o pc
 
   mov pc, lr
   
