@@ -39,18 +39,16 @@ Sos_fork:
 @ change the pc for child process
   ldr r5, =__child_return
   ldr r4, =usr_registers
-  ldr r4, [r4, r0]
+  ldr r4, [r4, r0, lsl #2]
   str r5, [r4, #15]
 
 __return_Sos_fork:
   add r0, r0, #1            @ PID is in r0
-  ldmfd sp!, {r4-r11, lr}
-  movs pc, lr
+  ldmfd sp!, {r4-r11, pc}
 
 __child_return:
   mov r0, #0
-  ldmfd sp!, {r4, r11, lr}
-  movs pc, lr
+  ldmfd sp!, {r4, r11, pc}
 
 @------------------------------------------------@
 
@@ -71,13 +69,15 @@ _copy_context:
   ldr r7, [r5, r0]        @ Adress of child  svc context
 
   add r6, r6, #52         @ Address of child  user stack            
+  mov r11, r6             @ Save r6 value
   ldr r6, [r6]            @ child user stack
   add r7, r7, #52         @ Address of child  svc  stack
+  mov r10, r7             @ Save r7 value
   ldr r7, [r7]            @ child svc  stack
 
 @ Copy svc stack
   add r4, sp, #56         @ Discard stack of _copy_context
-  ldr r9, =usr_sp 
+  ldr r9, =svc_sp 
   ldr r9, [r9, r1]        @ Address of default parent usr stack pointer
   cmp r9, r4              @ if stack is empty
   beq __return_copy_context
@@ -89,15 +89,18 @@ __loop_svc_copy_context:
   cmp r9, r4
   bne __loop_svc_copy_context
   
-  msr CPSR_c, #0xD0       @ Change to user mode IRQ/FIQ disabled
+  sub r7, r7, r8          @ Store new stack pointer in struct
+  str r7, [r10]
 
+  msr CPSR_c, #0xDF       @ Change to SYSTEM mode IRQ/FIQ disabled
+  
 @ Copy user stack
   mov r4, sp
   ldr r9, =usr_sp 
   ldr r9, [r9, r1]        @ Address of default parent usr stack pointer
   cmp r9, r4              @ if stack is empty
   beq __return_copy_context
-  sub r8, r4, r9          @ number of elements in stack
+  sub r8, r9, r4          @ number of elements in stack
   sub r6, r6, r8          @ "alloc" space for new elements
 __loop_usr_copy_context:
   ldr r5, [r4], #4        @ Load element from parent stack
@@ -105,6 +108,9 @@ __loop_usr_copy_context:
   cmp r9, r4
   bne __loop_usr_copy_context
  
+  sub r6, r6, r8          @ Store new stack pointer in struct
+  str r6, [r11]
+
 __return_copy_context:
   msr CPSR_c, #0xD3       @ Go back to SVC mode IRQ/FIQ disabled
   ldmfd sp!, {r0-r12, pc}
