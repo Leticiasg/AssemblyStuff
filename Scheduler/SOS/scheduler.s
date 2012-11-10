@@ -4,9 +4,9 @@
   .align 4
   .data
 
-.equ INACTIVE, #0
-.equ ACTIVE, #1
-.equ CURRENT, #2
+.equ WAITING, #0
+.equ READY, #1
+.equ RUNNING, #2
 
 PID: 
   .byte 1,2,3,4,5,6,7,8
@@ -76,6 +76,6 @@ svc8_registers:
 .global svc7_registers
 .global svc8_registers
 
-.global INACTIVE
-.global ACTIVE
-.global CURRENT
+.global WAITING
+.global READY
+.global RUNNING

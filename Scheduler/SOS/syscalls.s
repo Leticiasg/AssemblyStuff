@@ -1,5 +1,10 @@
 @---------------------------------@
 @                                 @
+@          Developed by           @
+@       Tiago Lobato Gimenes      @
+@                                 @
+@---------------------------------@
+@                                 @
 @            SYSCALLS             @
 @        IMPLEMENTATIONS          @
 @                                 @
@@ -41,14 +46,14 @@ Sos_exit:
 
   ldr r5, =process_status
   mov r4, r5
-__get_current:
+__get_running:
   ldrb r6, [r5, #1]!
-  cmp r6, CURRENT
-  bne __get_current
+  cmp r6, RUNNING
+  bne __get_running
 
   sub r4, r5, r4        @ Index is in r4
   
-  mov r6, INACTIVE
+  mov r6, WAITING
   strb r6, [r5, r4]
 
   ldmfd sp!, {r4-r11, lr}
