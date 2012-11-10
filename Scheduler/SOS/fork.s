@@ -89,7 +89,7 @@ __loop_svc_copy_context:
   cmp r9, r4
   bne __loop_svc_copy_context
   
-  msr CPSR_c, #0x70       @ Change to user mode IRQ/FIQ disabled
+  msr CPSR_c, #0xD0       @ Change to user mode IRQ/FIQ disabled
 
 @ Copy user stack
   mov r4, sp
@@ -106,7 +106,7 @@ __loop_usr_copy_context:
   bne __loop_usr_copy_context
  
 __return_copy_context:
-  msr CPSR_c, #0x73       @ Go back to SVC mode IRQ/FIQ disabled
+  msr CPSR_c, #0xD3       @ Go back to SVC mode IRQ/FIQ disabled
   ldmfd sp!, {r0-r12, pc}
 
 @------------------------------------------------@

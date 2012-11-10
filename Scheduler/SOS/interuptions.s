@@ -53,7 +53,7 @@ UNDEFINED_INSTRUCTION:
   .align 4
 
 SOFTWARE_INTERUPT:
-  msr CPSR_c, #0x73
+  msr CPSR_c, #0xD3
   stmfd sp!, {r4-r11, lr}
   
   cmp r7, #1
