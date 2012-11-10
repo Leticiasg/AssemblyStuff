@@ -15,6 +15,19 @@
 .global READY
 .global RUNNING
 
+  .align 4
+  .data
+
+@ Vector of pointers to the beginning of the user stack pointer
+usr_sp:
+  .word USR_STACK1, USR_STACK2, USR_STACK3, USR_STACK4, USR_STACK5,USR_STACK6, USR_STACK7, USR_STACK8
+.global usr_sp
+
+@ Vector of pointers to the beginning of the supervisor stack pointer
+svc_sp:
+  .word SVC_STACK1, SVC_STACK2, SVC_STACK3, SVC_STACK4, SVC_STACK5,  SVC_STACK6, SVC_STACK7, SVC_STACK8
+.global svc_sp
+
 @-----------------------------@
 @                             @
 @      Process Queue          @

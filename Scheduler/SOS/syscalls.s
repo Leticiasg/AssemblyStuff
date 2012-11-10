@@ -45,6 +45,7 @@ Sos_exit:
   stmfd sp!, {r4-r11, lr}
 
 @ Get current process running
+  ldr r7, =RUNNING
   ldr r5, =process_status
   mov r4, #-1
 __get_running:
@@ -52,7 +53,7 @@ __get_running:
   cmp r4, #8
   beq __return_Sos_exit   @ If no active process found
   ldrb r6, [r5, r4]
-  ldr r6, =RUNNING
+  cmp r6, r7              @ Compares r6 with RUNNING value
   bne __get_running
   
 @ Save r5 in tmp register
@@ -69,13 +70,14 @@ __fill_usr_registers:
   str r7, [r6, r5]
   str r7, [r8, r5]
   add r5, r5, #4
-  cmp r5, #64
+  cmp r5, #68
   bne __fill_usr_registers
+  str r7, [r8, r5]
 
 @ Reset sp
   mov r5, #52             @ change sp
-  ldr r7, =_usr_sp        
-  ldr r9, =_svc_sp
+  ldr r7, =usr_sp        
+  ldr r9, =svc_sp
   ldr r7, [r7, r4]        @ Load usr_stack*
   ldr r9, [r7, r4]        @ Load svc_stack*
   str r7, [r6, r5]        @ Stor usr_stack
@@ -89,15 +91,30 @@ __return_Sos_exit:
   ldmfd sp!, {r4-r11, lr}
   movs pc, lr
 
-@---------------------------------@
-@                                 @
-@              DATA               @
-@                                 @
-@---------------------------------@
+@------------------------------------------------@
 
-  .data
+  .align 4
+  .global Sos_getpid
 
-_usr_sp:
-  .word USR_STACK1, USR_STACK2, USR_STACK3, USR_STACK4, USR_STACK5,USR_STACK6, USR_STACK7, USR_STACK8
-_svc_sp:
-  .word SVC_STACK1, SVC_STACK2, SVC_STACK3, SVC_STACK4, SVC_STACK5,  SVC_STACK6, SVC_STACK7, SVC_STACK8
+Sos_getpid:
+  stmfd sp!, {r4-r11, lr}
+
+  mov r0, #0      @ Starts the return value, if returns 0 == fail !
+
+@ Get current process running
+  ldr r7, =RUNNING
+  ldr r5, =process_status
+  mov r4, #-1
+__get_running_pid:
+  add r4, r4 ,#1
+  cmp r4, #8                @ 8 is the max process number
+  beq __return_Sos_getpid   @ If no active process found
+  ldrb r6, [r5, r4]
+  cmp r6, r7                @ Compares r6 with RUNNING value
+  bne __get_running_pid
+  
+  add r0, r4, #1            @ PID value in return register
+
+__return_Sos_getpid:
+  ldmfd sp!, {r4-r11, lr}
+  movs pc, lr
