@@ -15,6 +15,13 @@
 .global READY
 .global RUNNING
  
+
+.equ SVC_MODE, 0
+.equ USR_MODE, 1
+
+.global SVC_MODE
+.global USR_MODE
+
   .align 4
   .data
 
@@ -33,6 +40,11 @@ svc_sp:
 @      Process Queue          @
 @                             @
 @-----------------------------@
+
+  .align 4
+  .global exec_mode
+exec_mode:
+  .byte USR_MODE, USR_MODE, USR_MODE, USR_MODE, USR_MODE, USR_MODE, USR_MODE, USR_MODE, 
 
   .align 4
   .global PID

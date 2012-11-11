@@ -47,12 +47,20 @@ Sos_fork:
   ldr r4, [r4, r0, lsl #2]
   str r5, [r4, #60]
 
+@ change the exec_mode for child process
+  ldr r5, =exec_mode
+  ldr r4, =SVC_MODE
+  strb r4, [r5, r0]
+
 __return_Sos_fork:
   add r0, r0, #1            @ PID is in r0
   ldmfd sp!, {r4-r11, pc}
 
 __child_return:
-  mov r0, #0
+  ldr r5, =exec_mode
+  ldr r4, =USR_MODE
+  strb r4, [r5, r0]         @ Process in user mode
+  mov r0, #0                @ Return value
   ldmfd sp!, {r4-r11, pc}
 
 @------------------------------------------------@
