@@ -70,36 +70,51 @@ svc_registers:
 usr1_registers: 
   .fill 13, 4, 0   @ salva r0-r12 
   .word USR_STACK1 @ inicializa o sp (r13)
-  .fill 3, 4, 0    @ salva r14-r15 e cpsr
+  .fill 1, 4, 0    @ salva r14
+  .word main       @ salva pc
+  .word 0x10    @ salva cpsr
 usr2_registers:
   .fill 13, 4, 0   @ salva r0-r12
   .word USR_STACK2 @ inicializa o sp (r13)
-  .fill 3, 4, 0    @ salva r14-r15 e cpsr
+  .fill 1, 4, 0    @ salva r14
+  .word main       @ salva pc
+  .word 0x10    @ salva cpsr
 usr3_registers:
   .fill 13, 4, 0   @ salva r0-r12
   .word USR_STACK3 @ inicializa o sp (r13)
-  .fill 3, 4, 0    @ salva r14-r15 e cpsr
+  .fill 1, 4, 0    @ salva r14
+  .word main       @ salva pc
+  .word 0x10    @ salva cpsr
 usr4_registers:
   .fill 13, 4, 0   @ salva r0-r12
   .word USR_STACK4 @ inicializa o sp (r13)
-  .fill 3, 4, 0    @ salva r14-r15 e cpsr
+   .fill 1, 4, 0    @ salva r14
+  .word main       @ salva pc
+  .word 0x10    @ salva cpsr
 usr5_registers:  
   .fill 13, 4, 0   @ salva r0-r12
   .word USR_STACK5 @ inicializa o sp (r13)
-  .fill 3, 4, 0    @ salva r14-r15 e cpsr
+   .fill 1, 4, 0    @ salva r14
+  .word main       @ salva pc
+  .word 0x10    @ salva cpsr
 usr6_registers:
   .fill 13, 4, 0   @ salva r0-r12
   .word USR_STACK6 @ inicializa o sp (r13)
-  .fill 3, 4, 0    @ salva r14-r15 e cpsr
+   .fill 1, 4, 0    @ salva r14
+  .word main       @ salva pc
+  .word 0x10    @ salva cpsr
 usr7_registers:
   .fill 13, 4, 0   @ salva r0-r12
   .word USR_STACK7 @ inicializa o sp (r13)
-  .fill 3, 4, 0    @ salva r14-r15 e cpsr
+   .fill 1, 4, 0    @ salva r14
+  .word main       @ salva pc
+  .word 0x10    @ salva cpsr
 usr8_registers:
   .fill 13, 4, 0   @ salva r0-r12
-  .word USR_STACK8 @ inicializa o sp (r13)
-  .fill 3, 4, 0    @ salva r14-r15 e cpsr
-
+  .word USR_STACK8 @ inicializa o sp (r13)  
+  .fill 1, 4, 0    @ salva r14
+  .word main       @ salva pc
+  .word 0x10    @ salva cpsr
     
   .global svc1_registers
   .global svc2_registers
@@ -113,32 +128,56 @@ usr8_registers:
 svc1_registers: 
   .fill 13, 4, 0   @ salva r0-r12
   .word SVC_STACK1 @ inicializa o sp (r13) para o modo supervisor
-  .fill 4, 4, 0    @ salva r14, r15, cpsr, spsr
+  .fill 1, 4, 0    @ salva r14
+  .word main       @ salva pc
+  .word 0x10
+  .fill 1, 4, 0    @ salva cpsr, spsr
 svc2_registers:
   .fill 13, 4, 0   @ salva r0-r12
   .word SVC_STACK2 @ inicializa o sp (r13) para o modo supervisor
-  .fill 4, 4, 0    @ salva r14, r15, cpsr, spsr
+  .fill 1, 4, 0    @ salva r14
+  .word main       @ salva pc
+  .word 0x10
+  .fill 1, 4, 0    @ salva cpsr, spsr
 svc3_registers:
   .fill 13, 4, 0   @ salva r0-r12
   .word SVC_STACK3 @ inicializa o sp (r13) para o modo supervisor
-  .fill 4, 4, 0    @ salva r14, r15, cpsr, spsr
+  .fill 1, 4, 0    @ salva r14
+  .word main       @ salva pc
+  .word 0x10
+  .fill 1, 4, 0    @ salva cpsr, spsr
 svc4_registers: 
   .fill 13, 4, 0   @ salva r0-r12
   .word SVC_STACK4 @ inicializa o sp (r13) para o modo supervisor
-  .fill 4, 4, 0    @ salva r14, r15, cpsr, spsr
+  .fill 1, 4, 0    @ salva r14
+  .word main       @ salva pc
+  .word 0x10
+  .fill 1, 4, 0    @ salva cpsr, spsr
 svc5_registers:
   .fill 13, 4, 0   @ salva r0-r12
   .word SVC_STACK5 @ inicializa o sp (r13) para o modo supervisor
-  .fill 4, 4, 0    @ salva r14, r15, cpsr, spsr
+  .fill 1, 4, 0    @ salva r14
+  .word main       @ salva pc
+  .word 0x10
+  .fill 1, 4, 0    @ salva cpsr, spsr
 svc6_registers:
   .fill 13, 4, 0   @ salva r0-r12
   .word SVC_STACK6 @ inicializa o sp (r13) para o modo supervisor
-  .fill 4, 4, 0    @ salva r14, r15, cpsr, spsr
+  .fill 1, 4, 0    @ salva r14
+  .word main       @ salva pc
+  .word 0x10
+  .fill 1, 4, 0    @ salva cpsr, spsr
 svc7_registers:
   .fill 13, 4, 0   @ salva r0-r12
   .word SVC_STACK7 @ inicializa o sp (r13) para o modo supervisor
-  .fill 4, 4, 0    @ salva r14, r15, cpsr, spsr
+  .fill 1, 4, 0    @ salva r14
+  .word main       @ salva pc
+  .word 0x10
+  .fill 1, 4, 0    @ salva cpsr, spsr
 svc8_registers:
   .fill 13, 4, 0   @ salva r0-r12
   .word SVC_STACK8 @ inicializa o sp (r13) para o modo supervisor
-  .fill 4, 4, 0    @ salva r14, r15, cpsr, spsr
+  .fill 1, 4, 0    @ salva r14
+  .word main       @ salva pc
+  .word 0x10
+  .fill 1, 4, 0    @ salva cpsr, spsr

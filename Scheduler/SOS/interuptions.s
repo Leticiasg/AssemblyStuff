@@ -72,7 +72,7 @@ SOFTWARE_INTERUPT:
 __Sos_exit:
   ldmfd sp!, {r4-r11, lr}
   msr CPSR_c, #0xD2        @ IRQ mode IRQ/FIQ disabled
-  b schedule
+  b scheduler
 
 __Sos_fork:
 __Sos_write:

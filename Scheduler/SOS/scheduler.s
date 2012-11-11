@@ -11,7 +11,7 @@ scheduler:
   ldrb r1, [r1, r2]
   ldr r2, =WAITING
   cmp r1, r2
-  beq __loop_search_pid
+  beq __process_already_dead
   bl  _save_context @ salva o contexto do processo atual
   mov sp, r0 @ desempilha r0-r12 e lr
   ldr r0, =current_pid
@@ -19,6 +19,12 @@ scheduler:
   ldr r1, =process_status
   ldr r2, =READY
   strb r2, [r1, r0] @ deixa o processo escalonado
+  b   __loop_search_pid
+
+__process_already_dead:
+  ldr r0, =current_pid
+  ldr r0, [r0]
+  ldr r1, =process_status
   
 __loop_search_pid:
   add r0, r0, #1
@@ -49,8 +55,8 @@ _save_context:
   ldr r2, =svc_registers
   ldr r3, =current_pid
   ldr r3, [r3]
-  ldr r1, [r1, r3] @ r1 = apontador para o vetor de registers do user
-  ldr r2, [r2, r3] @ r2 = apontador para o veotr de registers do supervisor
+  ldr r1, [r1, r3, lsl #2] @ r1 = apontador para o vetor de registers do user
+  ldr r2, [r2, r3, lsl #2] @ r2 = apontador para o veotr de registers do supervisor
   eor r4, r4, r4   @ contador
 
 __laco_save_usr_registers:      
@@ -90,7 +96,7 @@ _recupera_contexto:
 @ recebe em r0 o valor pid-1 do processo
 
    ldr r1, =usr_registers
-   ldr r1, [r1, r0]   @ apontador para usr_registers do processo atual
+   ldr r1, [r1, r0, lsl #2]   @ apontador para usr_registers do processo atual
    ldr r2, [r1, #60]  @ pega o valor de pc estorado
    stmfd sp!, {r2}    @ salva pc do processo na pilha
    ldr r2, [r1, #64]  @ passa o valor de cpsr do processo para r2
@@ -127,7 +133,7 @@ _recupera_contexto:
    msr CPSR_c, 0xd3
 
    ldr r1, =svc_registers
-   ldr r1, [r1, r0]  @ apontador para registers de svc
+   ldr r1, [r1, r0, lsl #2]  @ apontador para registers de svc
    ldr sp, [r1, #52] @ recupera o sp de svc
    ldr r2, [r1, #68]
    msr SPSR, r2      @ recupera o spsr de svc

@@ -43,8 +43,21 @@ __fill_usr_registers:
   ldr r7, [r7, r0, lsl #2]  @ Load  usr_stack*
   ldr r9, [r9, r0, lsl #2]  @ Load  svc_stack*
   str r7, [r6, r5]          @ Store usr_stack
-  str r9, [r8, r5]          @ Store usr_stack
+  str r9, [r8, r5]          @ Store svc_stack
 
+@ Reset pc
+  mov r5, #60               
+  ldr r7, =main            
+  str r7, [r6, r5]          @ Store pc in usr stack 
+  str r7, [r8, r5]          @ Store pc in svc stack
+
+@ Reset cpsr
+  mov r5, #64
+  mov r7, #0x10
+  str r7, [r6, r5]
+  mov r7, #0
+  str r7, [r8, r5]
+        
 @ Free position of process
   ldr r5, =process_status
   ldr r6, =WAITING
