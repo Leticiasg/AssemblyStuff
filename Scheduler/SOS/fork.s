@@ -32,6 +32,9 @@ Sos_fork:
 
 @ If achieved this point, it is possible to create a new
 @ child process
+  ldr r5, =process_status
+  ldr r6, =READY
+  strb r6, [r5, r0]
 
 @ copy the exact context from parent to child process
   bl _copy_context

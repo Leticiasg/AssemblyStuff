@@ -8,7 +8,7 @@
 @----------------------------@
 
 .equ WAITING, 0
-.equ REDAY, 1
+.equ READY, 1
 .equ RUNNING, 2
 
 .global WAITING

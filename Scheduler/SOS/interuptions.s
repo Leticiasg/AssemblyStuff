@@ -58,13 +58,25 @@ SOFTWARE_INTERUPT:
   
   cmp r7, #1
   bleq Sos_exit
+  beq __Sos_exit
   cmp r7, #2
   bleq Sos_fork
+  beq __Sos_fork
   cmp r7, #4
   bleq Sos_write
+  beq __Sos_write
   cmp r7, #20
   bleq Sos_getpid
+  beq __Sos_getpid
 
+__Sos_exit:
+  ldmfd sp!, {r4-r11, lr}
+  msr CPSR_c, #0xD2        @ IRQ mode IRQ/FIQ disabled
+  b schedule
+
+__Sos_fork:
+__Sos_write:
+__Sos_getpid:
   ldmfd sp!, {r4-r11, lr}
   movs pc, lr
 
