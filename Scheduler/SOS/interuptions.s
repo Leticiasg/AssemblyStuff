@@ -1,7 +1,9 @@
 @ This file contains the implementation for the interuptions
 
 @------------------------------------------------@
-  
+ 
+  .text
+
   .align 4
   .global _start
 

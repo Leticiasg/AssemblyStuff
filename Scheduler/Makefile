@@ -4,7 +4,7 @@ AS_FLAGS= -g
 LD_FLAGS= -g -Ttext=0x0
 
 USER_OBJ=$(wildcard UserCode/*.o)
-SOS_OBJ=SOS/interuptions.o SOS/config.o SOS/exit.o SOS/fork.o SOS/getpid.o SOS/scheduler.o SOS/structs.o SOS/write.o
+SOS_OBJ=SOS/interuptions.o SOS/exit.o SOS/fork.o SOS/getpid.o SOS/scheduler.o SOS/structs.o SOS/write.o SOS/config.o
 OUTPUT=prog
 
 all: prog

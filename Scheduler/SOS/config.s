@@ -1,7 +1,6 @@
 @ This file starts external modules of the ARM processor
 @ and starts os related things like the stack
 
-
 @---------------------------------@
 @                                 @
 @           CONSTANTS             @
@@ -29,27 +28,67 @@
 .equ TZIC_PRIORITY9, 0x424
 
 @ Configurable STACK values for each ARM core operation mode
-.equ UND_STACK, 0x7900
-.equ ABT_STACK, 0x7A00
-.equ IRQ_STACK, 0x7B00
-.equ FIQ_STACK, 0x7C00
-.equ USR_STACK1, 0x00010000 @ Begin of the stack from PID 1
-.equ SVC_STACK1, 0x0000F800 @ Begin of the stack from supervisor mode of PID 1
-.equ USR_STACK2, 0x0000F000 @ Begin of the stack from PID 2
-.equ SVC_STACK2, 0x0000E800 @ Begin of the stack from supervisor mode of PID 2
-.equ USR_STACK3, 0x0000E000 @ Begin of the stack from PID 3
-.equ SVC_STACK3, 0x0000D800 @ Begin of the stack from supervisor mode of PID 3
-.equ USR_STACK4, 0x0000D000 @ Begin of the stack from PID 4
-.equ SVC_STACK4, 0x0000C800 @ Begin of the stack from supervisor mode of PID 4
-.equ USR_STACK5, 0x0000C000 @ Begin of the stack from PID 5
-.equ SVC_STACK5, 0x0000B800 @ Begin of the stack from supervisor mode of PID 5
-.equ USR_STACK6, 0x0000B000 @ Begin of the stack from PID 6
-.equ SVC_STACK6, 0x0000A800 @ Begin of the stack from supervisor mode of PID 6
-.equ USR_STACK7, 0x0000A000 @ Begin of the stack from PID 7
-.equ SVC_STACK7, 0x00009800 @ Begin of the stack from supervisor mode of PID 7
-.equ USR_STACK8, 0x00009000 @ Begin of the stack from PID 8
-.equ SVC_STACK8, 0x00008800 @ Begin of the stack from supervisor mode of PID 8
-
+@.equ UND_STACK, 0x7900
+@.equ ABT_STACK, 0x7A00
+@.equ IRQ_STACK, 0x7B00
+@.equ FIQ_STACK, 0x7C00
+@.equ USR_STACK1, 0x00010000 @ Begin of the stack from PID 1
+@.equ SVC_STACK1, 0x0000F800 @ Begin of the stack from supervisor mode of PID 1
+@.equ USR_STACK2, 0x0000F000 @ Begin of the stack from PID 2
+@.equ SVC_STACK2, 0x0000E800 @ Begin of the stack from supervisor mode of PID 2
+@.equ USR_STACK3, 0x0000E000 @ Begin of the stack from PID 3
+@.equ SVC_STACK3, 0x0000D800 @ Begin of the stack from supervisor mode of PID 3
+@.equ USR_STACK4, 0x0000D000 @ Begin of the stack from PID 4
+@.equ SVC_STACK4, 0x0000C800 @ Begin of the stack from supervisor mode of PID 4
+@.equ USR_STACK5, 0x0000C000 @ Begin of the stack from PID 5
+@.equ SVC_STACK5, 0x0000B800 @ Begin of the stack from supervisor mode of PID 5
+@.equ USR_STACK6, 0x0000B000 @ Begin of the stack from PID 6
+@.equ SVC_STACK6, 0x0000A800 @ Begin of the stack from supervisor mode of PID 6
+@.equ USR_STACK7, 0x0000A000 @ Begin of the stack from PID 7
+@.equ SVC_STACK7, 0x00009800 @ Begin of the stack from supervisor mode of PID 7
+@.equ USR_STACK8, 0x00009000 @ Begin of the stack from PID 8
+@.equ SVC_STACK8, 0x00008800 @ Begin of the stack from supervisor mode of PID 8
+  
+UND_STACK:
+  .fill 0x100, 1, 0
+ABT_STACK:
+  .fill 0x100, 1, 0
+IRQ_STACK:
+  .fill 0x100, 1, 0
+FIQ_STACK:
+  .fill 0x100, 1, 0
+USR_STACK1:
+  .fill 0x800, 1, 0 @ Begin of the stack from PID 1
+SVC_STACK1:
+  .fill 0x800, 1, 0 @ Begin of the stack from supervisor mode of PID 1
+USR_STACK2:
+  .fill 0x800, 1, 0 @ Begin of the stack from PID 2
+SVC_STACK2:
+  .fill 0x800, 1, 0 @ Begin of the stack from supervisor mode of PID 2
+USR_STACK3:
+  .fill 0x800, 1, 0 @ Begin of the stack from PID 3
+SVC_STACK3:
+  .fill 0x800, 1, 0 @ Begin of the stack from supervisor mode of PID 3
+USR_STACK4:
+  .fill 0x800, 1, 0 @ Begin of the stack from PID 4
+SVC_STACK4:
+  .fill 0x800, 1, 0 @ Begin of the stack from supervisor mode of PID 4
+USR_STACK5:
+  .fill 0x800, 1, 0 @ Begin of the stack from PID 5
+SVC_STACK5:
+  .fill 0x800, 1, 0 @ Begin of the stack from supervisor mode of PID 5
+USR_STACK6:
+  .fill 0x800, 1, 0 @ Begin of the stack from PID 6
+SVC_STACK6:
+  .fill 0x800, 1, 0 @ Begin of the stack from supervisor mode of PID 6
+USR_STACK7:
+  .fill 0x800, 1, 0 @ Begin of the stack from PID 7
+SVC_STACK7:
+  .fill 0x800, 1, 0 @ Begin of the stack from supervisor mode of PID 7
+USR_STACK8:
+  .fill 0x800, 1, 0 @ Begin of the stack from PID 8
+SVC_STACK8:
+  .fill 0x800, 1, 0 @ Begin of the stack from supervisor mode of PID 8
         
 .global USR_STACK1
 .global SVC_STACK1
@@ -164,17 +203,17 @@ Start_TZIC:
 Start_Stack:
   @ First configure stacks for all modes
   msr CPSR_c, #0x13 @ SUPERVISOR mode, IRQ/FIQ enabled
-  mov sp, #SVC_STACK1 
+  ldr sp, =SVC_STACK1 
   msr CPSR_c, #0xDF @ Enter system mode, FIQ/IRQ disabled
-  mov sp, #USR_STACK1
+  ldr sp, =USR_STACK1
   msr CPSR_c, #0xD1 @ Enter FIQ mode, FIQ/IRQ disabled
-  mov sp, #FIQ_STACK
+  ldr sp, =FIQ_STACK
   msr CPSR_c, #0xD2 @ Enter IRQ mode, FIQ/IRQ disabled
-  mov sp, #IRQ_STACK
+  ldr sp, =IRQ_STACK
   msr CPSR_c, #0xD7 @ Enter abort mode, FIQ/IRQ disabled
-  mov sp, #ABT_STACK
+  ldr sp, =ABT_STACK
   msr CPSR_c, #0xDB @ Enter undefined mode, FIQ/IRQ disabled
-  mov sp, #UND_STACK
+  ldr sp, =UND_STACK
   msr CPSR_c, #0x1F @ Enter system mode, IRQ/FIQ enabled
 
   mov pc, lr

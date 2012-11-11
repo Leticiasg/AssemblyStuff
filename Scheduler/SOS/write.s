@@ -9,6 +9,8 @@
 @        IMPLEMENTATIONS          @
 @                                 @
 @---------------------------------@
+  
+  .text
 
   .align 4
   .global Sos_write
