@@ -96,15 +96,14 @@ ABORT:
 
 IRQ:
   @ GPT_SR <-- 1
+  sub   lr, lr, #4
+  stmfd sp!, {r0-r12, lr} @ salva o contexto na pilha de irq
+        
   ldr r0, =GPT_SR
   mov r1, #1
   str r1, [r0]
- 
-@ Change mode back to user mode
-  msr CPSR_c, #0x10
-@ Return from function  
-  sub lr, lr, #4
-  movs pc, lr
+  mov r0, sp
+  b  scheduler @ chama o escalonador
 
 @------------------------------------------------@
   

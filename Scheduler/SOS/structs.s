@@ -14,7 +14,7 @@
 .global WAITING
 .global READY
 .global RUNNING
-
+ 
   .align 4
   .data
 
@@ -35,27 +35,37 @@ svc_sp:
 @-----------------------------@
 
   .align 4
-
+  .global PID
 @ Process ID dos processos
 PID: 
   .byte 1,2,3,4,5,6,7,8
-  .global PID
 
+        
+  .align 4
+  .global process_status
 @ Status de execucao do processo
 process_status: 
   .byte 0,0,0,0,0,0,0,0
-  .global process_status
 
+  .align 4
+  .global usr_registers
 @ Apontadores para o vetor de registradores do modo user
 usr_registers:
   .word  usr1_registers,usr2_registers,usr3_registers,usr4_registers,usr5_registers,usr6_registers,usr7_registers,usr8_registers
-  .global usr_registers
-
+  
+   .global svc_registers
 @ Apontador para o vetor de registradores do modo supervisor
 svc_registers: 
   .word svc1_registers,svc2_registers,svc3_registers,svc4_registers,svc5_registers,svc6_registers,svc7_registers,svc8_registers
-  .global svc_registers
 
+  .global usr1_registers
+  .global usr2_registers
+  .global usr3_registers
+  .global usr4_registers
+  .global usr5_registers
+  .global usr6_registers
+  .global usr7_registers
+  .global usr8_registers     
 @ Vetor de registers do modo user
 usr1_registers: 
   .fill 13, 4, 0   @ salva r0-r12 
@@ -90,15 +100,15 @@ usr8_registers:
   .word USR_STACK8 @ inicializa o sp (r13)
   .fill 3, 4, 0    @ salva r14-r15 e cpsr
 
-  .global usr1_registers
-  .global usr2_registers
-  .global usr3_registers
-  .global usr4_registers
-  .global usr5_registers
-  .global usr6_registers
-  .global usr7_registers
-  .global usr8_registers
-        
+    
+  .global svc1_registers
+  .global svc2_registers
+  .global svc3_registers
+  .global svc4_registers
+  .global svc5_registers
+  .global svc6_registers
+  .global svc7_registers
+  .global svc8_registers       
 @ vetor de registers do modo supervisor
 svc1_registers: 
   .fill 13, 4, 0   @ salva r0-r12
@@ -132,12 +142,3 @@ svc8_registers:
   .fill 13, 4, 0   @ salva r0-r12
   .word SVC_STACK8 @ inicializa o sp (r13) para o modo supervisor
   .fill 4, 4, 0    @ salva r14, r15, cpsr, spsr
-
-  .global svc1_registers
-  .global svc2_registers
-  .global svc3_registers
-  .global svc4_registers
-  .global svc5_registers
-  .global svc6_registers
-  .global svc7_registers
-  .global svc8_registers
