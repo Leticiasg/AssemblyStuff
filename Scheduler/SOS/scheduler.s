@@ -8,6 +8,7 @@ scheduler:
   @ recebe em r0 o apontador para os registradores salvos na pilha
   ldr r1, =process_status
   ldr r2, =current_pid
+  ldr r2, [r2]
   ldrb r1, [r1, r2]
   ldr r2, =WAITING
   cmp r1, r2

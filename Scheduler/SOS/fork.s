@@ -45,7 +45,7 @@ Sos_fork:
   ldr r5, =__child_return
   ldr r4, =usr_registers
   ldr r4, [r4, r0, lsl #2]
-  str r5, [r4, #15]
+  str r5, [r4, #60]
 
 __return_Sos_fork:
   add r0, r0, #1            @ PID is in r0
@@ -53,7 +53,7 @@ __return_Sos_fork:
 
 __child_return:
   mov r0, #0
-  ldmfd sp!, {r4, r11, pc}
+  ldmfd sp!, {r4-r11, pc}
 
 @------------------------------------------------@
 
