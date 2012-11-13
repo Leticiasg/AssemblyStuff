@@ -100,7 +100,14 @@ _recupera_contexto:
    ldr r1, [r1, r0, lsl #2]   @ apontador para usr_registers do processo atual
    ldr r2, [r1, #60]  @ pega o valor de pc estorado
    stmfd sp!, {r2}    @ salva pc do processo na pilha
-   ldr r2, [r1, #64]  @ passa o valor de cpsr do processo para r2
+   ldr r3, =svc_registers
+   ldr r3, [r3, r0, lsl #2] @ apontador para svc_registers do processo atual
+   ldr r4, =exec_mode
+   ldrb r4, [r4, r0] @ pega o modo do processo
+   ldr r5, =USR_MODE
+   cmp r4, r5 
+   ldreq r2, [r1, #64]  @ passa o valor de cpsr do processo para r2
+   ldrne r2, [r3, #64]
    msr SPSR, r2       @ salva cpsr em spsr
    ldr r2, [r1, #28]
    stmfd sp!, {r2}    @ empilha r7

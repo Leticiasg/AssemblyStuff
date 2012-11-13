@@ -44,7 +44,7 @@ svc_sp:
   .align 4
   .global exec_mode
 exec_mode:
-  .byte USR_MODE, USR_MODE, USR_MODE, USR_MODE, USR_MODE, USR_MODE, USR_MODE, USR_MODE, 
+  .byte USR_MODE, USR_MODE, USR_MODE, USR_MODE, USR_MODE, USR_MODE, USR_MODE, USR_MODE
 
   .align 4
   .global PID

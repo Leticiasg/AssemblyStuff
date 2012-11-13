@@ -45,7 +45,7 @@ Sos_fork:
   ldr r5, =__child_return
   ldr r4, =svc_registers
   ldr r4, [r4, r0, lsl #2]
-  str r5, [r4, #60]
+  str r5, [r4, #56]
 
 @ change the exec_mode for child process
   ldr r5, =exec_mode
@@ -89,7 +89,7 @@ _copy_context:
   ldr r7, [r7]            @ child svc  stack
 
 @ Copy svc stack
-  add r4, sp, #56         @ Discard stack of _copy_context
+  add r4, sp, #60         @ Discard stack of _copy_context
   ldr r9, =svc_sp 
   ldr r9, [r9, r1]        @ Address of default parent usr stack pointer
   cmp r9, r4              @ if stack is empty
