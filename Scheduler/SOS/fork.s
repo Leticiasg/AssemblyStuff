@@ -76,7 +76,7 @@ _copy_context:
   
 @ Copy user stack
   msr CPSR_c, #0xDF        @ Change to SYSTEM mode IRQ/FIQ disabled
-  mov r4, sp
+  add r4, sp, #4
   ldr r9, =usr_sp 
   ldr r9, [r9, r1, lsl #2] @ Address of default parent usr stack pointer
   cmp r9, r4               @ if stack is empty

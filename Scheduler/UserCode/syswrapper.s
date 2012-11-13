@@ -45,11 +45,10 @@ exit:
 	.align	2
 	.globl fork
 fork:
-	stmfd 	sp!, {r7, lr}
+	stmfd 	sp!, {r7}
 	mov	r7, #2
-  mov lr, pc
   svc	0
-	ldmfd	sp!, {r7, lr}
+	ldmfd	sp!, {r7}
 	mov	pc, lr
 
 @ ---------------------------------------------------------------------------- @
