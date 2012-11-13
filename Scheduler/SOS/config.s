@@ -146,9 +146,9 @@ Start_GPT:
   str r1, [r0]
 
   @ Enable interuption Output Compare Channel 1
- @ ldr r0, =GPT_IR
- @ mov r1, #1
- @ str r1, [r0]
+  ldr r0, =GPT_IR
+  mov r1, #1
+  str r1, [r0]
 
   mov pc, lr
 
