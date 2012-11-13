@@ -24,10 +24,10 @@ clean:
 	rm $(OUTPUT)
 
 gdbtarget: all
-	arm-sim --load=$(OUTPUT) -degub-core -enable-gdb -gdb-port=3000 -cycles=1000
+	arm-sim --load=$(OUTPUT) -degub-core -enable-gdb -gdb-port=3000 -cycles=10000
 
 gdbhost: all
 	armv5e-elf-gdb $(OUTPUT)
 
 run: $(OUTPUT)
-	arm-sim --load=$(OUTPUT) -cycles=1000
+	arm-sim --load=$(OUTPUT) -cycles=100000
