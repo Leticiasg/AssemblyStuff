@@ -43,10 +43,13 @@ Sos_fork:
 
 @ change the pc for child process
   ldr r5, =__child_return
+  ldr r4, =usr_registers
+  ldr r4, [r4, r0, lsl #2]
+  str r5, [r4, #60]
   ldr r4, =svc_registers
   ldr r4, [r4, r0, lsl #2]
-  str r5, [r4, #56]
-
+  str r5, [r4, #60]
+        
 @ change the exec_mode for child process
   ldr r5, =exec_mode
   ldr r4, =SVC_MODE
@@ -80,6 +83,21 @@ _copy_context:
   ldr r6, [r4, r0]        @ Address of child  user context
   ldr r5, =svc_registers
   ldr r7, [r5, r0]        @ Adress of child  svc context
+
+@ Schumacker esteve aqui
+
+@  ldr r8, =usr_registers 
+@  ldr r8, [r8, r1]        @ Address of parent user context
+@  ldr r9, =svc_registers
+@  ldr r9, [r9, r1]        @ Address of parent supervisor context
+@  ldr r10, [r8, #64]      @ Get user parent CPSR
+@  str r10, [r6, #64]      @ Copy user CPSR to child
+@  mov r10, #0xd3
+@  str r10, [r7, #64]      @ Copy svc CPSR to child
+@  ldr r10, [r9, #68]      @ Get svc parent SPSR
+@  str r10, [r7, #68]      @ Copy svc SPSR to child  
+
+@ Schumacker saiu daqui
 
   add r6, r6, #52         @ Address of child  user stack            
   mov r11, r6             @ Save r6 value

@@ -1,4 +1,16 @@
-@ this file contains the implementation for the 
+@---------------------------------@
+@                                 @
+@          Developed by           @
+@    Everton Schumacker Soares    @
+@                                 @
+@---------------------------------@
+@                                 @
+@            SCHEDULER            @
+@        IMPLEMENTATIONS          @
+@                                 @
+@---------------------------------@
+
+ @ this file contains the implementation for the 
 @ scheduler using round robin
 
   .text
