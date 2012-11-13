@@ -43,7 +43,7 @@ Sos_fork:
 
 @ change the pc for child process
   ldr r5, =__child_return
-  ldr r4, =usr_registers
+  ldr r4, =svc_registers
   ldr r4, [r4, r0, lsl #2]
   str r5, [r4, #60]
 
