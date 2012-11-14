@@ -30,4 +30,4 @@ gdbhost: all
 	armv5e-elf-gdb $(OUTPUT)
 
 run: $(OUTPUT)
-	arm-sim --load=$(OUTPUT) -cycles=1000
+	arm-sim --load=$(OUTPUT) 
