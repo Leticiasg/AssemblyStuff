@@ -47,7 +47,7 @@ exit:
 fork:
 	stmfd 	sp!, {r7}
 	mov	r7, #2
-	svc	0
+  svc	0
 	ldmfd	sp!, {r7}
 	mov	pc, lr
 
