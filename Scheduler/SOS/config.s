@@ -9,6 +9,10 @@
 
   .align 4
 
+
+@.equ main, 0x8000
+@.global main
+
 @ Registers of GPT
 .equ GPT_CR, 0x53FA0000
 .equ GPT_OCR1, 0x53FA0010
@@ -28,67 +32,26 @@
 .equ TZIC_PRIORITY9, 0x424
 
 @ Configurable STACK values for each ARM core operation mode
-@.equ UND_STACK, 0x7900
-@.equ ABT_STACK, 0x7A00
-@.equ IRQ_STACK, 0x7B00
-@.equ FIQ_STACK, 0x7C00
-@.equ USR_STACK1, 0x00010000 @ Begin of the stack from PID 1
-@.equ SVC_STACK1, 0x0000F800 @ Begin of the stack from supervisor mode of PID 1
-@.equ USR_STACK2, 0x0000F000 @ Begin of the stack from PID 2
-@.equ SVC_STACK2, 0x0000E800 @ Begin of the stack from supervisor mode of PID 2
-@.equ USR_STACK3, 0x0000E000 @ Begin of the stack from PID 3
-@.equ SVC_STACK3, 0x0000D800 @ Begin of the stack from supervisor mode of PID 3
-@.equ USR_STACK4, 0x0000D000 @ Begin of the stack from PID 4
-@.equ SVC_STACK4, 0x0000C800 @ Begin of the stack from supervisor mode of PID 4
-@.equ USR_STACK5, 0x0000C000 @ Begin of the stack from PID 5
-@.equ SVC_STACK5, 0x0000B800 @ Begin of the stack from supervisor mode of PID 5
-@.equ USR_STACK6, 0x0000B000 @ Begin of the stack from PID 6
-@.equ SVC_STACK6, 0x0000A800 @ Begin of the stack from supervisor mode of PID 6
-@.equ USR_STACK7, 0x0000A000 @ Begin of the stack from PID 7
-@.equ SVC_STACK7, 0x00009800 @ Begin of the stack from supervisor mode of PID 7
-@.equ USR_STACK8, 0x00009000 @ Begin of the stack from PID 8
-@.equ SVC_STACK8, 0x00008800 @ Begin of the stack from supervisor mode of PID 8
-  
-UND_STACK:
-  .fill 0x100, 1, 0
-ABT_STACK:
-  .fill 0x100, 1, 0
-IRQ_STACK:
-  .fill 0x100, 1, 0
-FIQ_STACK:
-  .fill 0x100, 1, 0
-USR_STACK1:
-  .fill 0x800, 1, 0 @ Begin of the stack from PID 1
-SVC_STACK1:
-  .fill 0x800, 1, 0 @ Begin of the stack from supervisor mode of PID 1
-USR_STACK2:
-  .fill 0x800, 1, 0 @ Begin of the stack from PID 2
-SVC_STACK2:
-  .fill 0x800, 1, 0 @ Begin of the stack from supervisor mode of PID 2
-USR_STACK3:
-  .fill 0x800, 1, 0 @ Begin of the stack from PID 3
-SVC_STACK3:
-  .fill 0x800, 1, 0 @ Begin of the stack from supervisor mode of PID 3
-USR_STACK4:
-  .fill 0x800, 1, 0 @ Begin of the stack from PID 4
-SVC_STACK4:
-  .fill 0x800, 1, 0 @ Begin of the stack from supervisor mode of PID 4
-USR_STACK5:
-  .fill 0x800, 1, 0 @ Begin of the stack from PID 5
-SVC_STACK5:
-  .fill 0x800, 1, 0 @ Begin of the stack from supervisor mode of PID 5
-USR_STACK6:
-  .fill 0x800, 1, 0 @ Begin of the stack from PID 6
-SVC_STACK6:
-  .fill 0x800, 1, 0 @ Begin of the stack from supervisor mode of PID 6
-USR_STACK7:
-  .fill 0x800, 1, 0 @ Begin of the stack from PID 7
-SVC_STACK7:
-  .fill 0x800, 1, 0 @ Begin of the stack from supervisor mode of PID 7
-USR_STACK8:
-  .fill 0x800, 1, 0 @ Begin of the stack from PID 8
-SVC_STACK8:
-  .fill 0x800, 1, 0 @ Begin of the stack from supervisor mode of PID 8
+.equ UND_STACK, 0x11800
+.equ ABT_STACK, 0x11900
+.equ IRQ_STACK, 0x11a00
+.equ FIQ_STACK, 0x11b00
+.equ USR_STACK1, 0x00011000 @ Begin of the stack from PID 1
+.equ SVC_STACK1, 0x00010800 @ Begin of the stack from supervisor mode of PID 1
+.equ USR_STACK2, 0x00010000 @ Begin of the stack from PID 2
+.equ SVC_STACK2, 0x0000f800 @ Begin of the stack from supervisor mode of PID 2
+.equ USR_STACK3, 0x0000f000 @ Begin of the stack from PID 3
+.equ SVC_STACK3, 0x0000e800 @ Begin of the stack from supervisor mode of PID 3
+.equ USR_STACK4, 0x0000e000 @ Begin of the stack from PID 4
+.equ SVC_STACK4, 0x0000d800 @ Begin of the stack from supervisor mode of PID 4
+.equ USR_STACK5, 0x0000d000 @ Begin of the stack from PID 5
+.equ SVC_STACK5, 0x0000c800 @ Begin of the stack from supervisor mode of PID 5
+.equ USR_STACK6, 0x0000c000 @ Begin of the stack from PID 6
+.equ SVC_STACK6, 0x0000b800 @ Begin of the stack from supervisor mode of PID 6
+.equ USR_STACK7, 0x0000b000 @ Begin of the stack from PID 7
+.equ SVC_STACK7, 0x0000a800 @ Begin of the stack from supervisor mode of PID 7
+.equ USR_STACK8, 0x0000a000 @ Begin of the stack from PID 8
+.equ SVC_STACK8, 0x00009800 @ Begin of the stack from supervisor mode of PID 8
         
 .global USR_STACK1
 .global SVC_STACK1

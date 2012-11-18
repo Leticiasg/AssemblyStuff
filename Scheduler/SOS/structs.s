@@ -138,45 +138,45 @@ usr8_registers:
   .global svc8_registers       
 @ vetor de registers do modo supervisor
 svc1_registers: 
-  .fill 13, 4, 0   @ salva r0-r12
+  @.fill 13, 4, 0   @ salva r0-r12
   .word SVC_STACK1 @ inicializa o sp (r13) para o modo supervisor
   .fill 1, 4, 0    @ salva r14
-  .word main       @ salva pc
+  .word main      @ salva pc
   .word 0x10
   .fill 1, 4, 0    @ salva cpsr, spsr
 svc2_registers:
   .fill 13, 4, 0   @ salva r0-r12
   .word SVC_STACK2 @ inicializa o sp (r13) para o modo supervisor
   .fill 1, 4, 0    @ salva r14
-  .word main       @ salva pc
+  .word main     @ salva pc
   .word 0x10
   .fill 1, 4, 0    @ salva cpsr, spsr
 svc3_registers:
   .fill 13, 4, 0   @ salva r0-r12
   .word SVC_STACK3 @ inicializa o sp (r13) para o modo supervisor
   .fill 1, 4, 0    @ salva r14
-  .word main       @ salva pc
+  .word main    @ salva pc
   .word 0x10
   .fill 1, 4, 0    @ salva cpsr, spsr
 svc4_registers: 
   .fill 13, 4, 0   @ salva r0-r12
   .word SVC_STACK4 @ inicializa o sp (r13) para o modo supervisor
   .fill 1, 4, 0    @ salva r14
-  .word main       @ salva pc
+  .word main    @ salva pc
   .word 0x10
   .fill 1, 4, 0    @ salva cpsr, spsr
 svc5_registers:
   .fill 13, 4, 0   @ salva r0-r12
   .word SVC_STACK5 @ inicializa o sp (r13) para o modo supervisor
   .fill 1, 4, 0    @ salva r14
-  .word main       @ salva pc
+  .word main      @ salva pc
   .word 0x10
   .fill 1, 4, 0    @ salva cpsr, spsr
 svc6_registers:
   .fill 13, 4, 0   @ salva r0-r12
   .word SVC_STACK6 @ inicializa o sp (r13) para o modo supervisor
   .fill 1, 4, 0    @ salva r14
-  .word main       @ salva pc
+  .word main      @ salva pc
   .word 0x10
   .fill 1, 4, 0    @ salva cpsr, spsr
 svc7_registers:
