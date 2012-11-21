@@ -10,8 +10,8 @@
   .align 4
 
 
-@.equ main, 0x8000
-@.global main
+.equ main, 0x850c
+.global main
 
 @ Registers of GPT
 .equ GPT_CR, 0x53FA0000

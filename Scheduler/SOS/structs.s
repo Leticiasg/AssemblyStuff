@@ -23,7 +23,6 @@
 .global USR_MODE
 
   .align 4
-  .data
 
 @ Vector of pointers to the beginning of the user stack pointer
 usr_sp:

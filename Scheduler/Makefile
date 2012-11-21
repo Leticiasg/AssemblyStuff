@@ -7,10 +7,7 @@ USER_OBJ=UserCode/user.o UserCode/syswrapper.o UserCode/divsi3.o UserCode/modsi3
 SOS_OBJ=SOS/interuptions.o SOS/exit.o SOS/fork.o SOS/getpid.o SOS/scheduler.o SOS/structs.o SOS/write.o SOS/config.o
 OUTPUT=prog
 
-all: prog
-
-prog:	sos_obj user_obj
-	$(LD) $(LD_FLAGS) $(SOS_OBJ) $(USER_OBJ) -o $(OUTPUT)
+all: sos user
 
 sos:	sos_obj
 	$(LD) $(LD_FLAGS) $(SOS_OBJ) -o sos
@@ -29,20 +26,11 @@ clean:
 	cd UserCode; make clean
 	rm $(OUTPUT)
 
-gdbtarget: all
-	arm-sim --load=user -degub-core -enable-gdb -gdb-port=3000
-
-gdbhost: all
-	armv5e-elf-gdb prog
-
-run: all
-	arm-sim --load=prog
-
-run2:	sos	user
+run:	all
 	arm-sim --load-sys=sos --load=user
 
-gdbtarget2: sos	user
+gdbtarget: all
 	arm-sim --load=./sos -degub-core -enable-gdb -gdb-port=3000
 
-gdbhost2: sos user
+gdbhost: all
 	armv5e-elf-gdb ./sos
